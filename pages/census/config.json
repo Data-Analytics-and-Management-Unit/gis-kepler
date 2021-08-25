@@ -1,0 +1,17 @@
+{
+    "nightlight": {
+        "urls": [
+            "/data/nightlight/nightlight.json"
+        ]
+    },
+    "population": {
+        "urls": [
+            "/data/population/population.json"
+        ]
+    },
+    "towns": {
+        "urls": [
+            "/data/population/towns.json"
+        ]
+    }
+}
