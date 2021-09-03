@@ -509,7 +509,7 @@
         "isSplit": false
       },
       "mapStyle": {
-        "styleType": "muted",
+        "styleType": "basic_mapbox",
         "topLayerGroups": {
           "label": true,
           "road": false

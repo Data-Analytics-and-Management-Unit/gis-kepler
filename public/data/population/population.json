@@ -68286,7 +68286,7 @@
             "isSplit": false
           },
           "mapStyle": {
-            "styleType": "light",
+            "styleType": "basic_mapbox",
             "topLayerGroups": {
               "label": true
             },
