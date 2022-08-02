@@ -1,6 +1,7 @@
 import * as maplibre from 'maplibre-gl/dist/maplibre-gl';
 import { useRef } from 'react';
 import { useEffect } from 'react';
+import Image from 'next/image';
 
 import 'maplibre-gl/dist/maplibre-gl.css';
 import styles from '../../styles/Nightlight.module.scss';
@@ -183,7 +184,7 @@ function Nightlight() {
         <>
             <div className={styles.map_container_top} ref={mapContainerTop}></div>
             <div className={styles.map_container_bottom} ref={mapContainerBottom}></div>
-            <img className={styles.split_icon} ref={splitIcon} src="/img/split.svg" alt="" />
+            <Image className={styles.split_icon} ref={splitIcon} src="/img/split.svg" alt="" />
             <div className={styles.select_map_top}>
                 <select className={styles.select} name="sel" id="sel" defaultValue="1992" onChange={(e) => onSelectChange(e, mapTopRef.current)}>
                     <optgroup className={styles.optgroup}>
