@@ -1,0 +1,82 @@
+.map_container_top {
+    position: absolute;
+    z-index: 10;
+    height: 100%;
+    width: 100%;
+}
+
+.map_container_bottom {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
+.split_icon {
+    width: 70px;
+    height: 70px;
+    position: absolute;
+    top: calc(50% - 35px);
+    left: calc(50% - 35px);;
+    z-index: 11;
+    cursor: pointer;
+}
+
+.select_map_top {
+    position: absolute;
+    z-index: 12;
+    left: 20px;
+    top: 20px;
+    width: fit-content;
+    height: fit-content;
+}
+
+.select_map_bottom {
+    position: absolute;
+    z-index: 12;
+    right: 20px;
+    top: 20px;
+    width: fit-content;
+    height: fit-content;
+}
+
+.select {
+    // A reset of styles, including removing the default dropdown arrow
+    appearance: none;
+    // Additional resets for further consistency
+    background-color: transparent;
+    border: none;
+    padding: 0 1em 0 0;
+    margin: 0;
+    font-family: inherit;
+    font-size: inherit;
+    cursor: inherit;
+    line-height: inherit;
+    width: 110px;
+    // border: 1px solid var(--select-border);
+    border-radius: 0.25em;
+    padding: 0.25em 0.5em;
+    font-size: 2rem;
+    color: #fff;
+    cursor: pointer;
+    line-height: 1.1;
+    background-color: #1E1E1E;
+    // background-image: linear-gradient(to top, #f9f9f9, #fff 33%);
+    display: grid;
+    grid-template-areas: "select";
+    align-items: center;
+
+    &:after {
+        content: "abhishek";
+        width: 0.8em;
+        height: 0.5em;
+        background-color: #777;
+        clip-path: polygon(100% 0%, 0 0%, 50% 100%);
+        grid-area: select;
+        justify-self: end;
+    }
+}
+
+.optgroup {
+    font-size: 1rem;
+}
+
