@@ -184,7 +184,10 @@ function Nightlight() {
         <>
             <div className={styles.map_container_top} ref={mapContainerTop}></div>
             <div className={styles.map_container_bottom} ref={mapContainerBottom}></div>
-            <Image className={styles.split_icon} ref={splitIcon} src="/img/split.svg" alt="" />
+            <div className={styles.split_icon} ref={splitIcon}>
+                <Image src="/img/split.svg" alt="" width="100%" height="100%" />
+            </div>
+            
             <div className={styles.select_map_top}>
                 <select className={styles.select} name="sel" id="sel" defaultValue="1992" onChange={(e) => onSelectChange(e, mapTopRef.current)}>
                     <optgroup className={styles.optgroup}>
