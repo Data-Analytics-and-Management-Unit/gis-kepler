@@ -10,6 +10,7 @@ import styles from '../../styles/Nightlight.module.scss';
 function Nightlight() {
 
     const [topMapYear, setTopMapYear] = useState("1992");
+    const [bottomMapYear, setBottomMapYear] = useState("2020");
 
     const mapContainerTop = useRef()
     const mapContainerBottom = useRef()
@@ -49,8 +50,6 @@ function Nightlight() {
     }
     
     useEffect(() => {
-        window._nightlightState = 'neither'
-
         splitIcon.current.addEventListener('mousedown', interactiveDown)
         splitIcon.current.addEventListener('touchstart', interactiveDown)
         
@@ -58,8 +57,13 @@ function Nightlight() {
         window.addEventListener('touchend', interactiveUp)
     }, [])
 
-    function onSelectChange(e, map) {
-        setTopMapYear(e.target.value)
+    function onSelectChange(e, mapId) {
+        if(mapId === 'top') {
+            setTopMapYear(e.target.value)
+        } else if(mapId === 'bottom') {
+            setBottomMapYear(e.target.value)
+        }
+        
     }
 
     function renderTimePeriod(start, end) {
@@ -77,26 +81,29 @@ function Nightlight() {
             <NightlightMap
                 id={"map_top"} 
                 ref={mapContainerTop}
-                mapStyle="default"
+                mapStyle="dark"
                 className={styles.map_container_top}
                 nightlightYear={topMapYear}
                 linkMapsToRef={[mapContainerBottom]}
                 loadWidth="50%"
+                layerOpacity={0.8}
             />
             <NightlightMap 
                 id={"map_bottom"} 
                 ref={mapContainerBottom}
-                mapStyle="dark"
+                mapStyle="dark_gray"
                 className={styles.map_container_bottom}
-                nightlightYear={"2021"}
+                nightlightYear={bottomMapYear}
                 linkMapsToRef={[mapContainerTop]}
+                layerOpacity={0.8}
+
             />
             <div className={styles.split_icon} ref={splitIcon}>
                 <Image src="/img/split.svg" alt="" width="100%" height="100%" />
             </div>
             
             <div className={styles.select_map_top}>
-                <select className={styles.select} name="sel" id="sel" defaultValue="1992" onChange={(e) => onSelectChange(e, mapTopRef.current)}>
+                <select className={styles.select} name="sel" id="sel" defaultValue="1992" onChange={(e) => onSelectChange(e, 'top')}>
                     <optgroup className={styles.optgroup}>
                         {renderTimePeriod(1992, 2021)}
                     </optgroup>
@@ -104,7 +111,7 @@ function Nightlight() {
             </div>
 
             <div className={styles.select_map_bottom}>
-                <select className={styles.select} name="sel" id="sel" defaultValue="2021" onChange={(e) => onSelectChange(e, mapBottomRef.current)}>
+                <select className={styles.select} name="sel" id="sel" defaultValue="2021" onChange={(e) => onSelectChange(e, 'bottom')}>
                     <optgroup className={styles.optgroup}>
                         {renderTimePeriod(1992, 2021)}
                     </optgroup>
