@@ -31,7 +31,7 @@ const NightlightMap = forwardRef((props, ref) => {
     function addNightlightLayer(year, afterLayer, theme) {
         const map = mapRef.current
         console.log(theme)
-        let colorMap = (theme === 'dark') ? colorMapDark : colorMapLight;
+        let colorMap = (theme.search('dark') < 0) ? colorMapLight : colorMapDark;
 
         intensity.forEach((i, idx) => {
             map.addLayer(
