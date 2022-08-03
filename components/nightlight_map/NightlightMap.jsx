@@ -11,7 +11,8 @@ const NightlightMap = forwardRef((props, ref) => {
 
     const mapRef = useRef();
     const intensity = [4, 3, 2];
-    const colorMap = ["rgba(255, 0, 0, 1)", "rgba(255, 0, 0, .6)", "rgba(255, 0, 0, .4)"];
+    const colorMapLight = ["rgba(255, 0, 0, 1)", "rgba(255, 0, 0, .6)", "rgba(255, 0, 0, .4)"];
+    const colorMapDark = ["rgba(246, 196, 68, 0.9)", "rgba(228, 149, 56, 0.9)", "rgba(223, 103, 52, .9)"];
     let disabled = false;
     let sharedMapState = props.sharedMapState;
 
@@ -27,8 +28,10 @@ const NightlightMap = forwardRef((props, ref) => {
         });
     }
 
-    function addNightlightLayer(year, afterLayer) {
+    function addNightlightLayer(year, afterLayer, theme) {
         const map = mapRef.current
+        console.log(theme)
+        let colorMap = (theme === 'dark') ? colorMapDark : colorMapLight;
 
         intensity.forEach((i, idx) => {
             map.addLayer(
@@ -42,7 +45,7 @@ const NightlightMap = forwardRef((props, ref) => {
                     },
                     "paint": {
                         "fill-color": colorMap[idx],
-                        "fill-opacity": 0.4
+                        "fill-opacity": props.layerOpacity || 0.9
                     },
                     "filter": [
                         "all",
@@ -61,8 +64,6 @@ const NightlightMap = forwardRef((props, ref) => {
 
     function linkMaps(to) {
         if(!to) return false;
-
-        // console.log('link Map: ' + props.id)
 
         mapRef.current.on('movestart', (e) => {
             // console.log('before start: ' + props.id, window._nightlightState)
@@ -83,7 +84,9 @@ const NightlightMap = forwardRef((props, ref) => {
             let thisMap = e.target
             let state = window._nightlightState
 
-            if(state == 'neither') {
+            // console.log(props.id, window._nightlightState)
+
+            if(!state || state == 'neither') {
                 window._nightlightState = props.id
             }
 
@@ -106,18 +109,18 @@ const NightlightMap = forwardRef((props, ref) => {
         })
     }
 
-    function replaceNightlightLayers(from, to, afterLayer) {
+    function replaceNightlightLayers(from, to, afterLayer, theme) {
         intensity.forEach((i, idx) => {
             mapRef.current.removeLayer("nightlight_" + from + "_" + i)
         })
 
-        addNightlightLayer(to, afterLayer)
+        addNightlightLayer(to, afterLayer, theme)
     }
 
     useLayoutEffect(() => {
         let map = new maplibre.Map({
             container: ref.current,
-            style: '/styles/' + props.mapStyle + '.json',
+            style: '/styles/' + (props.mapStyle || 'light') + '.json',
             zoom: 8,
             center: [77.170169, 28.467687]
         })
@@ -144,19 +147,20 @@ const NightlightMap = forwardRef((props, ref) => {
                 
                 // Add nightlight source
                 addNightlightSource()
-                addNightlightLayer(props.nightlightYear, 'water_name_line')
+                addNightlightLayer(props.nightlightYear, 'airport_label', props.mapStyle)
     
                 // console.log(mapRef.current)
             })
         } else {
-            replaceNightlightLayers(mapRef.current.year, props.nightlightYear, 'water_name_line')
+            console.log(props.mapStyle)
+            replaceNightlightLayers(mapRef.current.year, props.nightlightYear, 'airport_label', props.mapStyle)
         }
     }, [props.nightlightYear])
 
     return (
         <div
             ref={ref}
-            className={styles.map_container + " " + (props.className || '')} 
+            className={props.className == undefined ? styles.map_container : props.className} 
             style={props.style}
         >    
         </div>
