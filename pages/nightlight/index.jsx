@@ -84,7 +84,7 @@ function Nightlight() {
                 }
             case 2:
                 return {
-                    name: 'Village / Urban Outer',
+                    name: 'Urban Outer',
                     class: styles.urban_outer
                 }
         }
