@@ -1,6 +1,6 @@
 import * as maplibre from 'maplibre-gl/dist/maplibre-gl';
 import { useRef } from 'react';
-import { useEffect } from 'react';
+import Head from 'next/head';
 
 import 'maplibre-gl/dist/maplibre-gl.css';
 import styles from '../../styles/Nightlight.module.scss';
@@ -15,6 +15,9 @@ function NightlightCompare() {
 
     return (
         <>
+            <Head>
+                <title>Comparing 30 years of Indian urban growth through nightlight data</title>
+            </Head>
             <NightlightMap 
                 id="map_1"
                 ref={mapContainerRef1}

@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import Head from 'next/head';
 
 import NightlightMap from '../../components/nightlight_map/NightlightMap';
 
@@ -128,6 +129,9 @@ function Nightlight() {
 
     return (
         <>
+            <Head>
+                <title>Indian urban growth through nightlight data</title>
+            </Head>
             <NightlightMap
                 id={"map_top"} 
                 ref={mapContainerTop}
