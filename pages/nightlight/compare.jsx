@@ -47,6 +47,20 @@ function NightlightCompare() {
                 linkMapsToRef={[mapContainerRef1, mapContainerRef2, mapContainerRef3]}
                 mapStyle="dark"
             />
+            <div className={styles.compare_year_container}>
+                <div className={styles.year_container}>
+                    <div>1992</div>
+                </div>
+                <div className={styles.year_container}>
+                    <div>2002</div>
+                </div>
+                <div className={styles.year_container}>
+                    <div>2012</div>
+                </div>
+                <div className={styles.year_container}>
+                    <div>2020</div>
+                </div>
+            </div>
         </>
     )
 }

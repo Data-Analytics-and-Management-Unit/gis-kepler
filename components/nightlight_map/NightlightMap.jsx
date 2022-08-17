@@ -18,12 +18,12 @@ const NightlightMap = forwardRef((props, ref) => {
     let sharedMapState = props.sharedMapState;
 
     function moveMoveEvent(e) {
-        console.log(e.features)
+        // console.log(e.features)
         // console.log(area())
         let vectorTileFeature = e.features[0]._vectorTileFeature
         // console.log(vectorTileFeature)
         let geo = vectorTileFeature.toGeoJSON(vectorTileFeature._x, vectorTileFeature._y, vectorTileFeature._z)
-        console.log(mapRef.current.year, area(geo) / 10e6)
+        // console.log(mapRef.current.year, area(geo) / 10e6)
         // console.log(JSON.stringify(e.features[0]._vectorTileFeature.toGeoJSON(vectorTileFeature._x, vectorTileFeature._y, vectorTileFeature._z)))
         hoverStateRef.current = e.features[0].id
         // mapRef.current.setFeatureState(
@@ -35,12 +35,14 @@ const NightlightMap = forwardRef((props, ref) => {
         //     { hover: true }
         // )
 
-        props.statsCallback({
-            year: mapRef.current.year, 
-            area: (area(geo) / 10e6).toFixed(1),
-            type: e.features[0].properties.intensity,
-            id: props.id
-        })
+        if(props.statsCallback) {
+            props.statsCallback({
+                year: mapRef.current.year, 
+                area: (area(geo) / 10e6).toFixed(1),
+                type: e.features[0].properties.intensity,
+                id: props.id
+            })
+        }
 
         if(!e.originalEvent.metaKey) {
             props.linkMapsToRef.forEach(m => {
@@ -58,6 +60,7 @@ const NightlightMap = forwardRef((props, ref) => {
     }
 
     function addEventListeners() {
+        // mapRef.current.on('mousemove', 'nightlight_' + props.nightlightYear + '_2', e => console.log(e.features))
         mapRef.current.on('mousemove', 'nightlight_' + props.nightlightYear + '_2', moveMoveEvent)
         mapRef.current.on('mousemove', 'nightlight_' + props.nightlightYear + '_3', moveMoveEvent)
         mapRef.current.on('mousemove', 'nightlight_' + props.nightlightYear + '_4', moveMoveEvent)
