@@ -56,10 +56,10 @@
     border-radius: 0.25em;
     padding: 0.25em 0.5em;
     font-size: 2rem;
-    color: #fff;
+    color: #1E1E1E;
     cursor: pointer;
     line-height: 1.1;
-    background-color: #1E1E1E;
+    background-color: #fff;
     // background-image: linear-gradient(to top, #f9f9f9, #fff 33%);
     display: grid;
     grid-template-areas: "select";
@@ -96,5 +96,79 @@
 
 .nightlight_4 {
     left: 75%;
+}
+
+.info_box {
+    position: absolute;
+    z-index: 12;
+    bottom: 10px;
+    align-self: center;
+    color: #1E1E1E;
+    left: 50%;
+    transform: translate(-50%, 0%);
+
+    .polygon_group {
+        width: fit-content;
+        margin: 0 auto;
+        color: #fff;
+        padding: 5px 10px;
+        border: 3px solid #fff;
+        border-radius: 4px;
+        font-weight: 800;
+        font-size: 1.3rem;
+    }
+
+    .stats_container {
+        background-color: #fff;
+        margin: 10px 0;
+        padding: 5px 10px;
+        border-radius: 4px;
+
+        .stats_numbers {
+            display: inline-block;
+            padding: 5px 10px;
+            margin: 5px 0;
+
+            .stats_year {
+                font-size: 1.3rem;
+                font-weight: 700;
+            }
+
+            .stats_area {
+                font-size: 2.5rem;
+                font-weight: 900;
+                .stats_unit {
+                    font-size: 1.3rem;
+                }
+            }
+        }
+
+        .stats_top {
+            @extend .stats_numbers;
+            color: #0B4DB5;
+            border-right: 1px dashed #00000033;
+            padding-right: 20px;
+        }
+
+        .stats_bottom {
+            @extend .stats_numbers;
+            color: #D80F00;
+            padding-left: 20px;
+        }
+    }
+
+    .urban_core {
+        background-color: #B89A4C;
+    }
+
+    .urban_periphery {
+        background-color: #A97A41;
+    }
+
+    .urban_outer {
+        background-color: #A25B3A;
+    }
+
+    
 }
 

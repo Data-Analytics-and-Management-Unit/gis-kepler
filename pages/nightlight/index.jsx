@@ -10,7 +10,9 @@ import styles from '../../styles/Nightlight.module.scss';
 function Nightlight() {
 
     const [topMapYear, setTopMapYear] = useState("1992");
-    const [bottomMapYear, setBottomMapYear] = useState("2020");
+    const [bottomMapYear, setBottomMapYear] = useState("2021");
+    const [statsTop, setStatsTop] = useState(undefined);
+    const [statsBottom, setStatsBottom] = useState(undefined);
 
     const mapContainerTop = useRef()
     const mapContainerBottom = useRef()
@@ -76,6 +78,59 @@ function Nightlight() {
         return res
     }
 
+    function getAreaNameFromType(type) {
+        switch(type) {
+            case 4: 
+                return {
+                    name: 'Urban Core',
+                    class: styles.urban_core
+                }
+            case 3:
+                return {
+                    name: 'Urban Periphery',
+                    class: styles.urban_periphery
+                }
+            case 2:
+                return {
+                    name: 'Village / Urban Outer',
+                    class: styles.urban_outer
+                }
+        }
+    }
+
+    function showStats() {
+        if(!statsTop || !statsBottom) return
+
+        let areaNameAndClass = getAreaNameFromType(statsTop.type)
+
+        return (
+            <div className={styles.info_box}>
+                <div className={styles.polygon_group + ' ' + areaNameAndClass.class}>{areaNameAndClass.name}</div>
+                <div className={styles.stats_container}>
+                    <div className={styles.stats_top}>
+                        <div className={styles.stats_year}>{statsTop.year}</div>
+                        <div className={styles.stats_area}>{statsTop.area} <span className={styles.stats_unit}>sq. km</span></div>
+                    </div>
+                    <div className={styles.stats_bottom}>
+                        <div className={styles.stats_year}>{statsBottom.year}</div>
+                        <div className={styles.stats_area}>{statsBottom.area} <span className={styles.stats_unit}>sq. km</span></div>
+                    </div>
+
+                </div>
+            </div>
+        )
+    }
+
+    function statsCallback(stats) {
+
+        console.log(stats)
+        if(stats.id === 'map_top') {
+            setStatsTop(stats)
+        } else if(stats.id === 'map_bottom') {
+            setStatsBottom(stats)
+        }
+    }
+
     return (
         <>
             <NightlightMap
@@ -87,6 +142,7 @@ function Nightlight() {
                 linkMapsToRef={[mapContainerBottom]}
                 loadWidth="50%"
                 layerOpacity={0.8}
+                statsCallback={statsCallback}
             />
             <NightlightMap 
                 id={"map_bottom"} 
@@ -96,11 +152,13 @@ function Nightlight() {
                 nightlightYear={bottomMapYear}
                 linkMapsToRef={[mapContainerTop]}
                 layerOpacity={0.8}
-
+                statsCallback={statsCallback}
             />
             <div className={styles.split_icon} ref={splitIcon}>
                 <Image src="/img/split.svg" alt="" width="100%" height="100%" />
             </div>
+
+            {showStats()}
             
             <div className={styles.select_map_top}>
                 <select className={styles.select} name="sel" id="sel" defaultValue="1992" onChange={(e) => onSelectChange(e, 'top')}>

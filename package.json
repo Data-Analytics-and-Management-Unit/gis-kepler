@@ -10,6 +10,7 @@
     "static-build": "next build && next export"
   },
   "dependencies": {
+    "@turf/turf": "^6.5.0",
     "kepler.gl": "2.5.3",
     "maplibre-gl": "^2.1.9",
     "next": "11.0.1",
