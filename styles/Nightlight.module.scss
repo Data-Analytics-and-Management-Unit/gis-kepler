@@ -109,10 +109,11 @@
 
     .polygon_group {
         width: fit-content;
-        margin: 0 auto;
+        // margin: 0 auto;
+        margin-bottom: 20px;
         color: #fff;
         padding: 5px 10px;
-        border: 3px solid #fff;
+        // border: 3px solid #fff;
         border-radius: 4px;
         font-weight: 800;
         font-size: 1.3rem;

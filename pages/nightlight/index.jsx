@@ -21,14 +21,6 @@ function Nightlight() {
     const mapBottomRef = useRef()
     let isDown = false;
 
-    function replaceNightlightLayers(map, from, to, afterLayer) {
-        intensity.forEach((i, idx) => {
-            map.removeLayer("nightlight_" + from + "_" + i)
-        })
-
-        addNightlightLayers(map, to, afterLayer)
-    }
-
     function moveCallback(e) {
         if(!isDown) return
 
@@ -101,17 +93,20 @@ function Nightlight() {
     function showStats() {
         if(!statsTop || !statsBottom) return
 
-        let areaNameAndClass = getAreaNameFromType(statsTop.type)
+        let areaNameAndClassTop = getAreaNameFromType(statsTop.type)
+        let areaNameAndClassBottom = getAreaNameFromType(statsBottom.type)
 
         return (
             <div className={styles.info_box}>
-                <div className={styles.polygon_group + ' ' + areaNameAndClass.class}>{areaNameAndClass.name}</div>
+                
                 <div className={styles.stats_container}>
                     <div className={styles.stats_top}>
+                        <div className={styles.polygon_group + ' ' + areaNameAndClassTop.class}>{areaNameAndClassTop.name}</div>
                         <div className={styles.stats_year}>{statsTop.year}</div>
                         <div className={styles.stats_area}>{statsTop.area} <span className={styles.stats_unit}>sq. km</span></div>
                     </div>
                     <div className={styles.stats_bottom}>
+                        <div className={styles.polygon_group + ' ' + areaNameAndClassBottom.class}>{areaNameAndClassBottom.name}</div>
                         <div className={styles.stats_year}>{statsBottom.year}</div>
                         <div className={styles.stats_area}>{statsBottom.area} <span className={styles.stats_unit}>sq. km</span></div>
                     </div>
