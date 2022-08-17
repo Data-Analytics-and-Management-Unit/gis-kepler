@@ -1,4 +1,4 @@
-import * as maplibre from 'maplibre-gl/dist/maplibre-gl-dev';
+import * as maplibre from 'maplibre-gl/dist/maplibre-gl';
 import { useRef } from 'react';
 import { useEffect, forwardRef } from 'react';
 import area from '@turf/area';
