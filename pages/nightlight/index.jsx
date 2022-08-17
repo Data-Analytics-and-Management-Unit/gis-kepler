@@ -111,8 +111,9 @@ function Nightlight() {
                         <div className={styles.stats_year}>{statsBottom.year}</div>
                         <div className={styles.stats_area}>{statsBottom.area} <span className={styles.stats_unit}>sq. km</span></div>
                     </div>
-
+                    <h5>India Urban Observatory</h5>
                 </div>
+                
             </div>
         )
     }
