@@ -1,16 +1,15 @@
-import Image from 'next/image';
 import Link from 'next/link';
+import Head from 'next/head';
 
 import styles from '../../styles/Nightlight.module.scss';
 
 function NightlightLanding() {
 
-    function navigate() {
-
-    }
-
     return (
         <section className={styles.landingPage}>
+            <Head>
+                <title>Urbanisation in India through nightlight</title>
+            </Head>
             <div className={styles.page_header}>
                 <h1>India Urban <span>Observatory</span></h1>
                 <div className={styles.logo_container}>
