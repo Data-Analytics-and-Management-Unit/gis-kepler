@@ -2,7 +2,7 @@ import * as maplibre from 'maplibre-gl/dist/maplibre-gl';
 import { useRef } from 'react';
 import Head from 'next/head';
 
-import 'maplibre-gl/dist/maplibre-gl.css';
+// import 'maplibre-gl/dist/maplibre-gl.css';
 import styles from '../../styles/Nightlight.module.scss';
 import NightlightMap from '../../components/nightlight_map/NightlightMap';
 

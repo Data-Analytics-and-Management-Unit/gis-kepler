@@ -3,7 +3,7 @@ import { useRef } from 'react';
 import { useEffect, forwardRef } from 'react';
 import area from '@turf/area';
 
-import 'maplibre-gl/dist/maplibre-gl.css';
+// import 'maplibre-gl/dist/maplibre-gl.css';
 import styles from './NightlightMap.module.scss';
 import { useLayoutEffect } from 'react';
 
