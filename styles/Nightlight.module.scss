@@ -54,7 +54,7 @@
     font-size: inherit;
     cursor: inherit;
     line-height: inherit;
-    width: 110px;
+    width: 120px;
     // border: 1px solid var(--select-border);
     border-radius: 0.25em;
     padding: 0.25em 0.5em;
@@ -68,10 +68,16 @@
     grid-template-areas: "select";
     align-items: center;
 
+    // background: transparent;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%231E1E1E' height='18' viewBox='0 0 24 24' width='18' xmlns='http://www.w3.org/2000/svg'><polygon class='cls-1' points='21.56 8.91 12 18.46 2.44 8.91 21.56 8.91'/></svg>");
+  background-repeat: no-repeat;
+  background-position-x: 95%;
+  background-position-y: 17px;
+
     &:after {
-        content: "abhishek";
-        width: 0.8em;
-        height: 0.5em;
+        content: "";
+        width: 3em;
+        height: 3em;
         background-color: #777;
         clip-path: polygon(100% 0%, 0 0%, 50% 100%);
         grid-area: select;
