@@ -7,10 +7,10 @@ function TravelTime() {
     const mapContainerRef = useRef();
     const mapRef = useRef();
     const dataRef = useRef();
-    const apiEndpointFulldata = 'http://localhost:8000/od_api/get_od_data_json'
-    const apiEndpointPartialdata = 'http://localhost:8000/od_api/get_od_data'
-    // const apiEndpointFulldata = 'https://gis.iuo.dataspace.mobi/od_api/get_od_data_json'
-    // const apiEndpointPartialdata = 'https://gis.iuo.dataspace.mobi/od_api/get_od_data'
+    // const apiEndpointFulldata = 'http://localhost:8000/od_api/get_od_data_json'
+    // const apiEndpointPartialdata = 'http://localhost:8000/od_api/get_od_data'
+    const apiEndpointFulldata = 'https://gis.iuo.dataspace.mobi/od_api/get_od_data_json'
+    const apiEndpointPartialdata = 'https://gis.iuo.dataspace.mobi/od_api/get_od_data'
 
     useEffect(() => {
         let map = new maplibre.Map({
