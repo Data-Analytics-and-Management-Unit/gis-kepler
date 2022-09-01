@@ -251,4 +251,6 @@ const NightlightMap = forwardRef((props, ref) => {
     )
 })
 
+NightlightMap.displayName = 'NightlightMap';
+
 export default NightlightMap;
