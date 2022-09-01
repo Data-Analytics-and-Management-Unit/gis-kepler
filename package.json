@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@turf/turf": "^6.5.0",
-    "kepler.gl": "2.5.3",
+    "kepler.gl": "2.5.5",
     "maplibre-gl": "^2.1.9",
     "next": "11.0.1",
     "react": "^16.8.4",
@@ -32,7 +32,12 @@
     "@deck.gl/mesh-layers": "8.2.0",
     "@deck.gl/react": "8.2.0",
     "deck.gl": "8.2.0",
-    "@luma.gl/constants": "^8.2.0",
-    "@luma.gl/core": "^8.2.0"
+    "@luma.gl/shadertools": "8.2.0",
+    "@luma.gl/core": "8.2.0",
+    "@luma.gl/experimental": "8.2.0",
+    "@luma.gl/constants": "8.2.0",
+    "@luma.gl/engine": "8.2.0",
+    "@luma.gl/gltools": "8.2.0",
+    "@luma.gl/webgl": "8.2.0"
   }
 }
