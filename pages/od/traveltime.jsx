@@ -1,11 +1,16 @@
 import * as maplibre from 'maplibre-gl/dist/maplibre-gl';
+import { useState } from 'react';
 import { useEffect, useRef } from 'react';
 
 function TravelTime() {
 
     const mapContainerRef = useRef();
     const mapRef = useRef();
-    const apiEndpoint = 'https://gis.iuo.dataspace.mobi/od_api/get_od_data_json'
+    const dataRef = useRef();
+    const apiEndpointFulldata = 'http://localhost:8000/od_api/get_od_data_json'
+    const apiEndpointPartialdata = 'http://localhost:8000/od_api/get_od_data'
+    // const apiEndpointFulldata = 'https://gis.iuo.dataspace.mobi/od_api/get_od_data_json'
+    // const apiEndpointPartialdata = 'https://gis.iuo.dataspace.mobi/od_api/get_od_data'
 
     useEffect(() => {
         let map = new maplibre.Map({
@@ -16,57 +21,73 @@ function TravelTime() {
         })
         mapRef.current = map;
 
+        let dataPromise = fetch(apiEndpointFulldata)
+
         map.on('load', () => {
-            map.addSource('ward', {
-                type: 'geojson',
-                data: apiEndpoint
-            })
 
-            map.addLayer({
-                id: 'ward_layer',
-                type: 'fill',
-                source: 'ward',
-                layout: {},
-                paint: {
-                    'fill-color': [
-                        'interpolate', ['linear'],
-                        ['number', ['get', 'mean_travel_sec']],
-                        0, '#FFFFFF',
-                        100, '#FFFFDD',
-                        300, '#D0E8B9', 
-                        700,'#9ED1BB', 
-                        1000, '#6CB8C1', 
-                        1300, '#4E9BBD',
-                        1500, '#3D7DB2',
-                        2000, '#3260A4',
-                        2500, '#244685',
-                        3000, '#182F69',
-                        3500, '#091A4A',
-                        4000, '#000125'
-                    ],
-                    'fill-opacity': 0.8,
-                    'fill-outline-color': '#6E91BE'
-                }
-            }, 'road_trunk_primary')
-        })
-
-        map.on('click', 'ward_layer', e => {
-            let id = e.features[0].properties.id
-            fetch(apiEndpoint + '?id=' + id)
+            dataPromise
                 .then(res => res.json())
-                .then(data => {
-                    map.getSource('ward').setData(data);
-                })
-            console.log(id)
-        });
+                .then(completeData => {
 
-        map.on('mouseenter', 'ward_layer', function () {
-            map.getCanvas().style.cursor = 'pointer';
-        });
-             
-        map.on('mouseleave', 'ward_layer', function () {
-        map.getCanvas().style.cursor = '';
-        });
+                    dataRef.current = completeData
+                
+                    map.addSource('ward', {
+                        type: 'geojson',
+                        data: completeData
+                    })
+        
+                    map.addLayer({
+                        id: 'ward_layer',
+                        type: 'fill',
+                        source: 'ward',
+                        layout: {},
+                        paint: {
+                            'fill-color': [
+                                'interpolate', ['linear'],
+                                ['number', ['get', 'mean_travel_sec']],
+                                0, '#FFFFFF',
+                                100, '#FFFFDD',
+                                300, '#D0E8B9', 
+                                700,'#9ED1BB', 
+                                1000, '#6CB8C1', 
+                                1300, '#4E9BBD',
+                                1500, '#3D7DB2',
+                                2000, '#3260A4',
+                                2500, '#244685',
+                                3000, '#182F69',
+                                3500, '#091A4A',
+                                4000, '#000125'
+                            ],
+                            'fill-opacity': 0.8,
+                            'fill-outline-color': '#6E91BE'
+                        }
+                    }, 'road_trunk_primary')
+                })
+        
+                map.on('click', 'ward_layer', e => {
+                    let id = e.features[0].properties.id
+                    fetch(apiEndpointPartialdata + '?id=' + id)
+                        .then(res => res.json())
+                        .then(partialData => {
+                            let completeData = dataRef.current
+                            for(let i=0; i<completeData.features.length; i++) {
+                                let destId = completeData.features[i].properties.id
+                                let t = partialData.destinations[destId]?.mean_travel_time || 0
+                                completeData.features[i].properties.mean_travel_sec = t
+                            }
+                            map.getSource('ward').setData(completeData);
+                        })
+                    console.log(id)
+                });
+        
+                map.on('mouseenter', 'ward_layer', function () {
+                    map.getCanvas().style.cursor = 'pointer';
+                });
+                     
+                map.on('mouseleave', 'ward_layer', function () {
+                    map.getCanvas().style.cursor = '';
+                });
+            });
     }, [])
 
     return (
