@@ -5,7 +5,7 @@ function TravelTime() {
 
     const mapContainerRef = useRef();
     const mapRef = useRef();
-    const apiEndpoint = 'http://127.0.0.1:8000/get_od_data_json'
+    const apiEndpoint = 'https://gis.iuo.dataspace.mobi/od_api/get_od_data_json'
 
     useEffect(() => {
         let map = new maplibre.Map({
