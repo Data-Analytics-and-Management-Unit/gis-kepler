@@ -10,6 +10,9 @@
     "static-build": "next build && next export"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@mui/material": "^5.10.3",
     "@turf/turf": "^6.5.0",
     "kepler.gl": "2.5.5",
     "maplibre-gl": "^2.1.9",
