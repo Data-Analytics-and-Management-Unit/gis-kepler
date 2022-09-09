@@ -395,13 +395,15 @@ function TravelTime() {
     return (
         <>
             <div ref={mapContainerRef} className="map_container"></div>
-            <div 
-            style={{
-                'marginTop': '10px',
-                'marginBottom': '10px'
-            }}>
+            <div className={styles.controller_container}>
                 <h1>Travel time through various modes</h1>
-                <FormControl fullWidth className={styles.form_control}>
+                <FormControl 
+                    fullWidth 
+                    style={{
+                        'marginTop': '10px',
+                        'marginBottom': '10px'
+                    }}
+                >
                     <InputLabel id="select-city">City</InputLabel>
                     <Select
                     labelId="select-city"
@@ -415,7 +417,13 @@ function TravelTime() {
 
                     
                 </FormControl>
-                <FormControl fullWidth className={styles.form_control}>
+                <FormControl
+                    fullWidth
+                    style={{
+                        'marginTop': '10px',
+                        'marginBottom': '10px'
+                    }}
+                >
                 <InputLabel id="select-mode">Mode</InputLabel>
                     <Select
                     labelId="select-mode"
@@ -428,7 +436,13 @@ function TravelTime() {
                         <MenuItem value={'transit'}>Public Transit</MenuItem>
                     </Select>
                 </FormControl>
-                <FormControl fullWidth className={styles.form_control}>
+                <FormControl
+                    fullWidth
+                    style={{
+                        'marginTop': '10px',
+                        'marginBottom': '10px'
+                    }}
+                >
                 <InputLabel id="select-stats">Stats</InputLabel>
                     <Select
                     labelId="select-stats"
