@@ -395,7 +395,11 @@ function TravelTime() {
     return (
         <>
             <div ref={mapContainerRef} className="map_container"></div>
-            <div className={styles.controller_container}>
+            <div 
+            style={{
+                'marginTop': '10px',
+                'marginBottom': '10px'
+            }}>
                 <h1>Travel time through various modes</h1>
                 <FormControl fullWidth className={styles.form_control}>
                     <InputLabel id="select-city">City</InputLabel>
