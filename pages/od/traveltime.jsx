@@ -42,10 +42,10 @@ function TravelTime() {
     const mode = useRef(modeState);
     const stats = useRef(statsState);
 
-    const apiEndpointFulldata = 'http://localhost:8000/od_api/get_od_data_json'
-    const apiEndpointPartialdata = 'http://localhost:8000/od_api/get_od_data'
-    // const apiEndpointFulldata = 'https://gis.iuo.dataspace.mobi/od_api/get_od_data_json'
-    // const apiEndpointPartialdata = 'https://gis.iuo.dataspace.mobi/od_api/get_od_data'
+    // const apiEndpointFulldata = 'http://localhost:8000/od_api/get_od_data_json'
+    // const apiEndpointPartialdata = 'http://localhost:8000/od_api/get_od_data'
+    const apiEndpointFulldata = 'https://gis.iuo.dataspace.mobi/od_api/get_od_data_json'
+    const apiEndpointPartialdata = 'https://gis.iuo.dataspace.mobi/od_api/get_od_data'
 
     const initWard = {
         bangalore: {
