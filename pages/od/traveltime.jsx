@@ -420,6 +420,9 @@ function TravelTime() {
     return (
         <>
             <div ref={mapContainerRef} className="map_container"></div>
+            <div className={styles.iuo_title}>
+                India Urban Observatory
+            </div>
             <div className={styles.controller_container}>
                 <h1 className={styles.heading}>Impact of transport modes and traffic on travel time, fuel consumption, cost and carbon emissions</h1>
                 <FormControl 
