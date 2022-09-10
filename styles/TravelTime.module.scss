@@ -75,8 +75,37 @@
     width: 300px;
     background-color: #ffffff;
     border-radius: 5px;
+    overflow-y: scroll;
+
+    a {
+        color: #3D7DB2;
+    }
 
     h1 {
         margin-top: 5px;
+    }
+    .heading {
+        font-size: 1.6rem;
+    }
+    .detail_info {
+        line-height: 1.6rem;
+        text-align: justify;
+    }
+}
+
+.legend {
+    position: absolute;
+    right: 10px;
+    bottom: 30px;
+    display: flex;
+    .legend_box {
+        width: 15px;
+        height: 15px;
+        p {
+            position: relative;
+            top: 9px;
+            font-size: 0.5rem;
+
+        }
     }
 }

@@ -331,7 +331,7 @@ function TravelTime() {
 
     function renderMaxTimeMenu() {
         if(modeState == 'driving') {
-            return <MenuItem value={'max_travel_time'}>Max Travel Time</MenuItem>
+            return <MenuItem value={'max_travel_time'}>Peak Traffic Conditions</MenuItem>
         }
     }
 
@@ -392,11 +392,36 @@ function TravelTime() {
         }
     }
 
+    function renderLegend() {
+        let colors = ['FFFFDD', 'D0E8B9', '9ED1BB', '6CB8C1', '4E9BBD', '3D7DB2', '3260A4', '244685', '182F69', '091A4A', '000125']
+        let text = ['1 mins', '5 mins', '12 mins', '17 mins', '22 mins', '25 mins', '34 mins', '42 mins', '50 mins', '59 mins', '> 1hr']
+        let res = []
+        let textArea
+
+        for(let i=0; i<colors.length; i++) {
+            textArea = undefined
+            if(i % 2 == 0) {
+                textArea = <p>{text[i]}</p>
+            }
+            res.push(
+                <div
+                    style={{
+                        backgroundColor: '#' + colors[i]
+                    }} 
+                    className={styles.legend_box}
+                >
+                    {textArea}
+                </div>
+            )
+        }
+        return res
+    }
+
     return (
         <>
             <div ref={mapContainerRef} className="map_container"></div>
             <div className={styles.controller_container}>
-                <h1>Travel time through various modes</h1>
+                <h1 className={styles.heading}>Impact of transport modes and traffic on travel time, fuel consumption, cost and carbon emissions</h1>
                 <FormControl 
                     fullWidth 
                     style={{
@@ -451,10 +476,14 @@ function TravelTime() {
                     label="Stats"
                     onChange={handleStatsChange}
                     >
-                        <MenuItem value={'average_travel_time'}>Average Travel Time</MenuItem>
+                        <MenuItem value={'average_travel_time'}>Normal Traffic Conditions</MenuItem>
                         {renderMaxTimeMenu()}
                     </Select>
                 </FormControl>
+                <p className={styles.detail_info}>This visualisation gives an overview of travel time within different wards of Bangalore by driving and public transit.</p>
+                <p className={styles.detail_info}>It shows you various time and distance dependant indicators like average speed of the trip, fuel consumption, fuel price for a trip and carbon emissions under normal and peak traffic conditions.</p>
+                <p className={styles.detail_info}>Time and distance is computed from one centroid point of a ward to another.</p>
+                <p className={styles.detail_info}>Fuel consumption is computed based on a study documented in <a href="http://ijtte.com/uploads/2015-12-22/935be804-3a4a-3e79IJTTE_Vol%205(4)_10.pdf" target="_blank">this paper</a></p>
             </div>
             <div
             ref={infoBoxRef}
@@ -477,6 +506,9 @@ function TravelTime() {
                     </div>
                     {renderDrivingStats()}
                 </div>
+            </div>
+            <div className={styles.legend}>
+                {renderLegend()}
             </div>
         </>
     )
