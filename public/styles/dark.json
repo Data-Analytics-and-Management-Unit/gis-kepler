@@ -1018,7 +1018,7 @@
         "visibility": "visible"
       },
       "paint": {
-        "line-color": "#e9ac77",
+        "line-color": "rgb(69,69,69)",
         "line-width": {
           "base": 1.2,
           "stops": [[9.9, 0], [10, 1.4], [14, 8], [20, 12]]
@@ -1226,7 +1226,7 @@
         "visibility": "visible"
       },
       "paint": {
-        "line-color": "#fc8",
+        "line-color": "rgb(69,69,69)",
         "line-width": {
           "base": 1.2,
           "stops": [[9.9, 0], [10, 1], [14, 6], [20, 10]]
@@ -1417,7 +1417,7 @@
         "visibility": "visible"
       },
       "paint": {
-        "line-color": "#fea",
+        "line-color": "rgb(69,69,69)",
         "line-width": {"base": 1.2, "stops": [[5, 0], [7, 1], [20, 18]]},
         "line-dasharray": [2, 2]
       }
@@ -1469,7 +1469,7 @@
       "paint": {
         "line-color": {
           "base": 1,
-          "stops": [[5, "hsl(26, 87%, 62%)"], [6, "#fc8"]]
+          "stops": [[5, "rgb(69,69,69)"], [6, "rgb(69,69,69)"]]
         },
         "line-width": {"base": 1.2, "stops": [[5, 0], [7, 1], [20, 18]]},
         "line-dasharray": [2, 2]
@@ -2010,7 +2010,7 @@
       ],
       "layout": {"line-join": "round", "visibility": "visible"},
       "paint": {
-        "line-color": "#fea",
+        "line-color": "rgb(69,69,69)",
         "line-width": {"base": 1.2, "stops": [[5, 0], [7, 1], [20, 18]]},
         "line-dasharray": [2, 2]
       }
@@ -2972,7 +2972,7 @@
       "metadata": {},
       "source": "openmaptiles",
       "source-layer": "place",
-      "minzoom": 8,
+      "minzoom": 15,
       "filter": [
         "all",
         ["in", "class", "hamlet", "island", "islet", "neighbourhood", "suburb"]
@@ -3003,7 +3003,7 @@
       "metadata": {},
       "source": "openmaptiles",
       "source-layer": "place",
-      "minzoom": 8,
+      "minzoom": 15,
       "filter": ["all", ["==", "class", "village"]],
       "layout": {
         "text-font": ["Roboto Regular", "Noto Sans Regular"],
