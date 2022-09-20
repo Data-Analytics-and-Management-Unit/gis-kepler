@@ -10,6 +10,7 @@ function TransitRoute() {
 
     const mapContainerRef = useRef();
     const mapRef = useRef();
+    const tooltipRef = useRef();
 
     useEffect(() => {
         let map = new maplibre.Map({
@@ -21,6 +22,107 @@ function TransitRoute() {
         mapRef.current = map;
 
         map.on('load', () => {
+
+            map.addSource('unserved_area_percentage', {
+                'type': 'geojson',
+                'data': '/data/mobility/unserved_area_percentage.geojson'
+            })
+
+            map.addLayer({
+                'id': 'unserved_area_percentage_layer',
+                'type': 'fill',
+                'source': 'unserved_area_percentage',
+                'layout': {
+                    'visibility': 'none',
+                },
+                'paint': {
+                    'fill-color': [
+                        'interpolate', ['linear'],
+                        ['number', ['get', 'per_area_unserved']],
+                        0, '#F1EEF6',
+                        10, '#D0D1E6',
+                        20, '#A6BDDB', 
+                        40,'#74A9CF', 
+                        60, '#2B8CBE', 
+                        80, '#045A8D'
+                    ],
+                    'fill-opacity': 0.8
+                }
+            }, 'road_label') 
+
+            map.addSource('tti', {
+                'type': 'geojson',
+                'data': '/data/mobility/tti.geojson'
+            })
+
+            map.addLayer({
+                'id': 'tti_layer',
+                'type': 'fill',
+                'source': 'tti',
+                'layout': {
+                    'visibility': 'none',
+                },
+                'paint': {
+                    'fill-color': [
+                        "step",
+                        ["get", "tti"],
+                        "#f1eef6",
+                        0,
+                        "#FFC300",
+                        0.9,
+                        "#F1920E",
+                        1.2,
+                        "#E3611C",
+                        1.5,
+                        "#C70039",
+                        1.7,
+                        "#900C3F",
+                        2,
+                        "#5A1846"
+                      ],
+                    'fill-opacity': 0.8
+                }
+            }, 'road_label') 
+
+            
+
+            map.addSource('stop_reach_15', {
+                'type': 'geojson',
+                'data': '/data/mobility/isochrone_15_mins.geojson'
+            })
+
+            map.addLayer({
+                'id': 'stop_reach_15_layer',
+                'type': 'fill',
+                'source': 'stop_reach_15',
+                'layout': {
+                    'visibility': 'none',
+                },
+                'paint': {
+                    'fill-color': '#F2C644',
+                    'fill-opacity': 0.8
+                }
+            }, 'road_label') 
+            
+            
+            map.addSource('stop_reach_5', {
+                'type': 'geojson',
+                'data': '/data/mobility/isochrone_5_mins.geojson'
+            })
+
+            map.addLayer({
+                'id': 'stop_reach_5_layer',
+                'type': 'fill',
+                'source': 'stop_reach_5',
+                'layout': {
+                    'visibility': 'none',
+                },
+                'paint': {
+                    'fill-color': '#c3294f',
+                    'fill-opacity': 0.8
+                }
+            }, 'road_label') 
+
             map.addSource('route', {
                 'type': 'geojson',
                 'data': '/data/mobility/routes_expanded.json'
@@ -62,39 +164,6 @@ function TransitRoute() {
                     ]
                 }
             }, 'road_label')  
-
-            map.addSource('stop_reach_15', {
-                'type': 'geojson',
-                'data': '/data/mobility/isochrone_15_mins.geojson'
-            })
-
-            map.addLayer({
-                'id': 'stop_reach_15_layer',
-                'type': 'fill',
-                'source': 'stop_reach_15',
-                'layout': {},
-                'paint': {
-                    'fill-color': '#F2C644',
-                    'fill-opacity': 0.8
-                }
-            }, 'road_label') 
-            
-            
-            map.addSource('stop_reach_5', {
-                'type': 'geojson',
-                'data': '/data/mobility/isochrone_5_mins.geojson'
-            })
-
-            map.addLayer({
-                'id': 'stop_reach_5_layer',
-                'type': 'fill',
-                'source': 'stop_reach_5',
-                'layout': {},
-                'paint': {
-                    'fill-color': '#99203E',
-                    'fill-opacity': 0.8
-                }
-            }, 'road_label') 
             
             
 
@@ -107,13 +176,30 @@ function TransitRoute() {
                 'id': 'stops_layer',
                 'type': 'circle',
                 'source': 'stops',
+                'layout': {
+                    'visibility': 'none',
+                },
                 'paint': {
                     'circle-color': '#fff',
                     'circle-radius': 2,
                     'circle-stroke-width': 0.1,
                     'circle-stroke-color': '#fff'
                 }
-            }, 'road_label')  
+            }, 'road_label') 
+
+            map.on('mousemove', 'tti_layer', (e) => {
+                console.log(e)
+                console.log(tooltipRef.current.style)
+
+                tooltipRef.current.style.top = (e.point.y + 20) + 'px'
+                tooltipRef.current.style.left = (e.point.x + 20) + 'px'
+                tooltipRef.current.style.display = 'block'
+                tooltipRef.current.innerHTML = '<p><span>Travel Time Index: </span>' + e.features[0].properties.tti + '</p>'
+            })
+
+
+            
+            
         })
     }, [])
 
@@ -128,6 +214,7 @@ function TransitRoute() {
 
         if(visibility === 'visible' || visibility === undefined) {
             map.setLayoutProperty(id, 'visibility', 'none');
+            tooltipRef.current.style.display = 'none'
         } else {
             map.setLayoutProperty(id, 'visibility', 'visible');
         }
@@ -145,6 +232,7 @@ function TransitRoute() {
 
             res.push(
                 <div
+                    key={i}
                     style={{
                         backgroundColor: '#' + colors[i]
                     }} 
@@ -162,29 +250,38 @@ function TransitRoute() {
             <div ref={mapContainerRef} className="map_container"></div>
             <div className={styles.transit_control_container}>
                 <h3>India Urban<br/>Observatory</h3>
-                <h4>Public transit reachability analysis</h4>
+                <h4>Public transit reachability<br/>analysis</h4>
                 <div className={styles.option_container}>
                     <div className={styles.option_box}>
-                        <Checkbox defaultChecked size="small" onChange={() => {toggleLayer('stops_layer')}}/>
+                        <Checkbox size="small" onChange={() => {toggleLayer('stops_layer')}}/>
                         <span className={styles.layer_name}>Bus Stops</span>
                     </div>
                     <div className={styles.option_box}>
-                        <Checkbox defaultChecked size="small" onChange={() => {toggleLayer('stop_reach_5_layer')}}/>
+                        <Checkbox size="small" onChange={() => {toggleLayer('stop_reach_5_layer')}}/>
                         <span className={styles.layer_name}>Reachability within 5 mins</span>
                     </div>
                     <div className={styles.option_box}>
-                        <Checkbox defaultChecked size="small" onChange={() => {toggleLayer('stop_reach_15_layer')}} />
+                        <Checkbox size="small" onChange={() => {toggleLayer('stop_reach_15_layer')}} />
                         <span className={styles.layer_name}>Reachability in 15 mins</span>
                     </div>
                     <div className={styles.option_box}>
                         <Checkbox defaultChecked size="small" onChange={() => {toggleLayer('route_layer')}} />
-                        <span className={styles.layer_name}>Bus Routes</span>
+                        <span className={styles.layer_name}>Trips and speed on public transit</span>
+                    </div>
+                    <div className={styles.option_box}>
+                        <Checkbox size="small" onChange={() => {toggleLayer('unserved_area_percentage_layer')}} />
+                        <span className={styles.layer_name}>Unserved Areas</span>
+                    </div>
+                    <div className={styles.option_box}>
+                        <Checkbox size="small" onChange={() => {toggleLayer('tti_layer')}} />
+                        <span className={styles.layer_name}>Travel Time Index from Majestic</span>
                     </div>
                 </div>
             </div>
             <div className={styles.legend}>
                 {renderLegend()}
             </div>
+            <div className={styles.tooltip} ref={tooltipRef}></div>
         </>
     )
 }
