@@ -3,11 +3,45 @@
     left: 10px;
     top: 10px;
     padding: 10px 10px;
-    padding-right: 20px;
     background-color: #fff;
-    .option_box {
-        span {
-            font-size: 0.8rem;
+    h3 {
+        font-size: 2rem;
+        margin: 5px 0;
+        margin-left: 10px;
+    }
+    .option_container {
+        display: grid;
+        grid-template-columns: 50% 50%;
+        .option_box {
+            background-color: #f1f1f1;
+            margin: 4px 4px;
+            padding: 3px;
+            border-radius: 5px;
+            .layer_name {
+                font-size: 0.8rem;
+                font-weight: 600;
+                display: block;
+                margin: 0 10px;
+                margin-bottom: 5px;
+            }
+        }
+    }
+}
+
+.legend {
+    position: absolute;
+    right: 10px;
+    bottom: 30px;
+    display: flex;
+    border: 1px solid #fff;
+    .legend_box {
+        width: 15px;
+        height: 15px;
+        p {
+            position: relative;
+            top: 9px;
+            font-size: 0.5rem;
+            color: #fff;
         }
     }
 }

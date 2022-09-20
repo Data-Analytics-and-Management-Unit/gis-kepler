@@ -50,8 +50,8 @@ function TransitRoute() {
                         0, '#FFFFFF',
                         10, '#D7191C',
                         20, '#FDAE61',
-                        35, '#A6D96A',
-                        45, '#1A9641',
+                        25, '#A6D96A',
+                        35, '#1A9641',
                         50, '#0b3f1b'
                     ],
                     'line-width': [
@@ -74,8 +74,8 @@ function TransitRoute() {
                 'source': 'stop_reach_15',
                 'layout': {},
                 'paint': {
-                    'fill-color': '#00ff00',
-                    'fill-opacity': 0.4
+                    'fill-color': '#F2C644',
+                    'fill-opacity': 0.8
                 }
             }, 'road_label') 
             
@@ -91,8 +91,8 @@ function TransitRoute() {
                 'source': 'stop_reach_5',
                 'layout': {},
                 'paint': {
-                    'fill-color': '#ff0000',
-                    'fill-opacity': 0.4
+                    'fill-color': '#99203E',
+                    'fill-opacity': 0.8
                 }
             }, 'road_label') 
             
@@ -108,7 +108,7 @@ function TransitRoute() {
                 'type': 'circle',
                 'source': 'stops',
                 'paint': {
-                    'circle-color': '#11b4da',
+                    'circle-color': '#fff',
                     'circle-radius': 2,
                     'circle-stroke-width': 0.1,
                     'circle-stroke-color': '#fff'
@@ -133,27 +133,56 @@ function TransitRoute() {
         }
     }
 
+    function renderLegend() {
+        let colors = ['D7191C', 'FDAE61', 'A6D96A', '1A9641', '0b3f1b']
+        let text = ['10 kmph', '20', '25', '35', '50']
+        let res = []
+        let textArea
+
+        for(let i=0; i<colors.length; i++) {
+            textArea = undefined
+            textArea = <p>{text[i]}</p>
+
+            res.push(
+                <div
+                    style={{
+                        backgroundColor: '#' + colors[i]
+                    }} 
+                    className={styles.legend_box}
+                >
+                    {textArea}
+                </div>
+            )
+        }
+        return res
+    }
+
     return (
         <>
             <div ref={mapContainerRef} className="map_container"></div>
             <div className={styles.transit_control_container}>
-                <h3>India Urban Observatory</h3>
-                <div className={styles.option_box}>
-                    <Checkbox defaultChecked size="small" onChange={() => {toggleLayer('route_layer')}} />
-                    <span>Bus Routes</span>
+                <h3>India<br/>Urban<br/>Observatory</h3>
+                <div className={styles.option_container}>
+                    <div className={styles.option_box}>
+                        <Checkbox defaultChecked size="small" onChange={() => {toggleLayer('stops_layer')}}/>
+                        <span className={styles.layer_name}>Bus Stops</span>
+                    </div>
+                    <div className={styles.option_box}>
+                        <Checkbox defaultChecked size="small" onChange={() => {toggleLayer('stop_reach_5_layer')}}/>
+                        <span className={styles.layer_name}>Reachability within 5 mins</span>
+                    </div>
+                    <div className={styles.option_box}>
+                        <Checkbox defaultChecked size="small" onChange={() => {toggleLayer('stop_reach_15_layer')}} />
+                        <span className={styles.layer_name}>Reachability in 15 mins</span>
+                    </div>
+                    <div className={styles.option_box}>
+                        <Checkbox defaultChecked size="small" onChange={() => {toggleLayer('route_layer')}} />
+                        <span className={styles.layer_name}>Bus Routes</span>
+                    </div>
                 </div>
-                <div className={styles.option_box}>
-                    <Checkbox defaultChecked size="small" onChange={() => {toggleLayer('stops_layer')}}/>
-                    <span>Bus Stops</span>
-                </div>
-                <div className={styles.option_box}>
-                    <Checkbox defaultChecked size="small" onChange={() => {toggleLayer('stop_reach_5_layer')}}/>
-                    <span>Reachability of stops with 5 mins walk</span>
-                </div>
-                <div className={styles.option_box}>
-                    <Checkbox defaultChecked size="small" onChange={() => {toggleLayer('stop_reach_15_layer')}}/>
-                    <span>Reachability of stops with 15 mins walk</span>
-                </div>
+            </div>
+            <div className={styles.legend}>
+                {renderLegend()}
             </div>
         </>
     )
