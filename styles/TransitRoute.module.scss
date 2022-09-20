@@ -1,0 +1,13 @@
+.transit_control_container {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    padding: 10px 10px;
+    padding-right: 20px;
+    background-color: #fff;
+    .option_box {
+        span {
+            font-size: 0.8rem;
+        }
+    }
+}
