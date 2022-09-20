@@ -161,7 +161,8 @@ function TransitRoute() {
         <>
             <div ref={mapContainerRef} className="map_container"></div>
             <div className={styles.transit_control_container}>
-                <h3>India<br/>Urban<br/>Observatory</h3>
+                <h3>India Urban<br/>Observatory</h3>
+                <h4>Public transit reachability analysis</h4>
                 <div className={styles.option_container}>
                     <div className={styles.option_box}>
                         <Checkbox defaultChecked size="small" onChange={() => {toggleLayer('stops_layer')}}/>
