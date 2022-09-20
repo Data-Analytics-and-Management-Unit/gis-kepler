@@ -11,6 +11,10 @@ function TransitRoute() {
     const mapContainerRef = useRef();
     const mapRef = useRef();
     const tooltipRef = useRef();
+    const legendRoutesRef = useRef();
+    const legendUnservedRef = useRef();
+    const legendTtiRef = useRef();
+    const layerVisibleRef = useRef();
 
     useEffect(() => {
         let map = new maplibre.Map({
@@ -64,22 +68,31 @@ function TransitRoute() {
                 },
                 'paint': {
                     'fill-color': [
-                        "step",
-                        ["get", "tti"],
-                        "#f1eef6",
-                        0,
-                        "#FFC300",
-                        0.9,
-                        "#F1920E",
-                        1.2,
-                        "#E3611C",
-                        1.5,
-                        "#C70039",
-                        1.7,
-                        "#900C3F",
-                        2,
-                        "#5A1846"
-                      ],
+                        'interpolate', ['linear'],
+                        ['number', ['get', 'tti']],
+                        0.5, '#F1EEF6',
+                        1.0, '#A6BDDB', 
+                        1.5,'#74A9CF', 
+                        1.7, '#2B8CBE', 
+                        1.9, '#045A8D'
+                    ],
+                    // 'fill-color': [
+                    //     "step",
+                    //     ["get", "tti"],
+                    //     "#f1eef6",
+                    //     0,
+                    //     "#FFC300",
+                    //     0.9,
+                    //     "#F1920E",
+                    //     1.2,
+                    //     "#E3611C",
+                    //     1.5,
+                    //     "#C70039",
+                    //     1.7,
+                    //     "#900C3F",
+                    //     2,
+                    //     "#5A1846"
+                    //   ],
                     'fill-opacity': 0.8
                 }
             }, 'road_label') 
@@ -187,17 +200,29 @@ function TransitRoute() {
                 }
             }, 'road_label') 
 
-            map.on('mousemove', 'tti_layer', (e) => {
-                console.log(e)
-                console.log(tooltipRef.current.style)
+            map.on('mousemove', 'unserved_area_percentage_layer', (e) => {
 
                 tooltipRef.current.style.top = (e.point.y + 20) + 'px'
                 tooltipRef.current.style.left = (e.point.x + 20) + 'px'
                 tooltipRef.current.style.display = 'block'
-                tooltipRef.current.innerHTML = '<p><span>Travel Time Index: </span>' + e.features[0].properties.tti + '</p>'
+                tooltipRef.current.innerHTML = '<p><span>Percent area unserved: </span>' + e.features[0].properties.per_area_unserved + '</p>' + '<p><span>Ward Name: </span>' + e.features[0].properties.ward_name + '</p>'
             })
 
+            map.on('mousemove', 'tti_layer', (e) => {
 
+                tooltipRef.current.style.top = (e.point.y + 20) + 'px'
+                tooltipRef.current.style.left = (e.point.x + 20) + 'px'
+                tooltipRef.current.style.display = 'block'
+                tooltipRef.current.innerHTML = '<p><span>Travel Time Index: </span>' + e.features[0].properties.tti + '</p>' + '<p><span>Ward Name: </span>' + e.features[0].properties.name + '</p>'
+            })
+
+            legendRoutesRef.current.style.visibility = 'visible'
+            layerVisibleRef.current = {
+                'route_layer': true,
+                'unserved_area_percentage_layer': false,
+                'tti_layer': false
+            }
+            
             
             
         })
@@ -212,19 +237,53 @@ function TransitRoute() {
 
         console.log(visibility)
 
+        legendRoutesRef.current.style.visibility = 'hidden'
+        legendTtiRef.current.style.visibility = 'hidden'
+        legendUnservedRef.current.style.visibility = 'hidden'
+
         if(visibility === 'visible' || visibility === undefined) {
             map.setLayoutProperty(id, 'visibility', 'none');
             tooltipRef.current.style.display = 'none'
+            layerVisibleRef.current[id] = false
+
+            let idToShow;
+            Object.keys(layerVisibleRef.current).forEach((k) => {
+                if(layerVisibleRef.current[k]) {
+                    idToShow = k
+                }
+            })
+            setVisibilityProp(idToShow, 'visible')
         } else {
             map.setLayoutProperty(id, 'visibility', 'visible');
+
+            layerVisibleRef.current[id] = true
+            setVisibilityProp(id, 'visible')
         }
     }
 
-    function renderLegend() {
+    function setVisibilityProp(layer_name, vis) {
+        if(layer_name === 'route_layer') {
+            legendRoutesRef.current.style.visibility = vis
+        } else if(layer_name === 'unserved_area_percentage_layer') {
+            legendUnservedRef.current.style.visibility = vis
+        } else if(layer_name === 'tti_layer') {
+            legendTtiRef.current.style.visibility = vis
+        }
+    }
+
+    function renderLegend(id) {
         let colors = ['D7191C', 'FDAE61', 'A6D96A', '1A9641', '0b3f1b']
         let text = ['10 kmph', '20', '25', '35', '50']
         let res = []
         let textArea
+
+        if(id === 'tti') {
+            colors = ['F1EEF6', 'A6BDDB', '74A9CF', '2B8CBE', '045A8D']
+            text = ['0.5 TTI', '1.0', '1.5', '1.7', '2.0']
+        } else if(id === 'unserved') {
+            colors = ['F1EEF6', 'D0D1E6', 'A6BDDB', '74A9CF', '045A8D']
+            text = ['10 percent', '20', '40', '60', '80']
+        }
 
         for(let i=0; i<colors.length; i++) {
             textArea = undefined
@@ -278,8 +337,14 @@ function TransitRoute() {
                     </div>
                 </div>
             </div>
-            <div className={styles.legend}>
-                {renderLegend()}
+            <div ref={legendRoutesRef} className={styles.legend}>
+                {renderLegend('routes')}
+            </div>
+            <div ref={legendUnservedRef} className={styles.legend}>
+                {renderLegend('unserved')}
+            </div>
+            <div ref={legendTtiRef} className={styles.legend}>
+                {renderLegend('tti')}
             </div>
             <div className={styles.tooltip} ref={tooltipRef}></div>
         </>
