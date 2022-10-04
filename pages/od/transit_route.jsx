@@ -1,10 +1,33 @@
 import * as maplibre from 'maplibre-gl/dist/maplibre-gl';
 import { useState } from 'react';
 import { useEffect, useRef } from 'react';
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend,
+    PointElement,
+    LineElement,
+  } from 'chart.js';
+  import { Bar, Scatter } from 'react-chartjs-2';
 
 import Checkbox from '@mui/material/Checkbox';
 
 import styles from '../../styles/TransitRoute.module.scss';
+
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend,
+    PointElement,
+    LineElement
+);
 
 function TransitRoute() {
 
@@ -15,11 +38,101 @@ function TransitRoute() {
     const legendUnservedRef = useRef();
     const legendTtiRef = useRef();
     const layerVisibleRef = useRef();
+    const barChartRef = useRef();
+    const scatterChartRef = useRef();
+
+    const barChart = {
+        'options': {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: 'false'
+                },
+                title: {
+                    display: true,
+                    text: 'Worst wards for travel time index',
+                }
+            }
+        },
+        'data': {
+            labels: [],
+            datasets: [
+                {
+                    label: 'Worst wards for travel time index',
+                    data: [],
+                    backgroundColor: '#244685',
+                }
+            ]
+        }
+    }
+
+    const scatterChart = {
+        'options': {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: '% area of the ward unserved'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Population of the ward'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: true,
+                    text: 'Area unserved vs population of the ward'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: (c) => {
+                            return 'Ward: ' + c.raw.ward + ' | Pop: ' + c.raw.x + ' | Unserved: ' + c.raw.y + '%'
+                        }
+                    }
+                }
+            },
+            elements: {
+                point: {
+                    radius: 2
+                }
+            }
+        },
+        'data': {
+            datasets: [
+                {
+                    label: '',
+                    data: [],
+                    backgroundColor: '#F1AE6C',
+                    showLine: true,
+                    fill: false,
+                    borderColor: '#F1AE6C',
+                    radius: 0
+                },
+                {
+                    label: 'Area unserved vs population of the ward',
+                    data: [],
+                    backgroundColor: '#244685',
+                }
+            ]
+        }
+    }
 
     useEffect(() => {
         let map = new maplibre.Map({
             container: mapContainerRef.current,
-            style: '/styles/dark.json',
+            style: '/styles/mute.json',
             zoom: 11,
             center: [77.592476, 12.976711]
         })
@@ -44,11 +157,11 @@ function TransitRoute() {
                         'interpolate', ['linear'],
                         ['number', ['get', 'per_area_unserved']],
                         0, '#F1EEF6',
-                        10, '#D0D1E6',
-                        20, '#A6BDDB', 
-                        40,'#74A9CF', 
-                        60, '#2B8CBE', 
-                        80, '#045A8D'
+                        10, '#3D7DB2',
+                        20, '#3260A4', 
+                        40,'#244685', 
+                        60, '#091A4A', 
+                        80, '#000125'
                     ],
                     'fill-opacity': 0.8
                 }
@@ -71,10 +184,10 @@ function TransitRoute() {
                         'interpolate', ['linear'],
                         ['number', ['get', 'tti']],
                         0.5, '#F1EEF6',
-                        1.0, '#A6BDDB', 
-                        1.5,'#74A9CF', 
-                        1.7, '#2B8CBE', 
-                        1.9, '#045A8D'
+                        1.0, '#3260A4', 
+                        1.5,'#244685', 
+                        1.7, '#091A4A', 
+                        1.9, '#000125'
                     ],
                     // 'fill-color': [
                     //     "step",
@@ -93,7 +206,7 @@ function TransitRoute() {
                     //     2,
                     //     "#5A1846"
                     //   ],
-                    'fill-opacity': 0.8
+                    'fill-opacity': 1
                 }
             }, 'road_label') 
 
@@ -168,12 +281,13 @@ function TransitRoute() {
                         25, '#A6D96A',
                         35, '#1A9641',
                         50, '#0b3f1b'
+
                     ],
                     'line-width': [
                         'interpolate', ['linear'],
                         ['number', ['get', 'trips']],
                         10, 0.1,
-                        200, 2.5
+                        200, 3.5
                     ]
                 }
             }, 'road_label')  
@@ -193,8 +307,8 @@ function TransitRoute() {
                     'visibility': 'none',
                 },
                 'paint': {
-                    'circle-color': '#fff',
-                    'circle-radius': 2,
+                    'circle-color': '#0E2E54',
+                    'circle-radius': 2.5,
                     'circle-stroke-width': 0.1,
                     'circle-stroke-color': '#fff'
                 }
@@ -205,7 +319,7 @@ function TransitRoute() {
                 tooltipRef.current.style.top = (e.point.y + 20) + 'px'
                 tooltipRef.current.style.left = (e.point.x + 20) + 'px'
                 tooltipRef.current.style.display = 'block'
-                tooltipRef.current.innerHTML = '<p><span>Percent area unserved: </span>' + e.features[0].properties.per_area_unserved + '</p>' + '<p><span>Ward Name: </span>' + e.features[0].properties.ward_name + '</p>'
+                tooltipRef.current.innerHTML = '<p><span>Percent area unserved: </span>' + (e.features[0].properties.per_area_unserved || 'NA') + '</p>' + '<p><span>Ward Name: </span>' + e.features[0].properties.ward_name + '</p>'
             })
 
             map.on('mousemove', 'tti_layer', (e) => {
@@ -213,7 +327,7 @@ function TransitRoute() {
                 tooltipRef.current.style.top = (e.point.y + 20) + 'px'
                 tooltipRef.current.style.left = (e.point.x + 20) + 'px'
                 tooltipRef.current.style.display = 'block'
-                tooltipRef.current.innerHTML = '<p><span>Travel Time Index: </span>' + e.features[0].properties.tti + '</p>' + '<p><span>Ward Name: </span>' + e.features[0].properties.name + '</p>'
+                tooltipRef.current.innerHTML = '<p><span>Travel Time Index: </span>' + (e.features[0].properties.tti || 'NA') + '</p>' + '<p><span>Ward Name: </span>' + e.features[0].properties.name + '</p>'
             })
 
             legendRoutesRef.current.style.visibility = 'visible'
@@ -226,6 +340,58 @@ function TransitRoute() {
             
             
         })
+
+
+        // Load graphs data
+
+        fetch('/data/mobility/tti.geojson')
+            .then(res => res.json())
+            .then(res => {
+                let x = []
+                let y = []
+                let features = res.features
+                let sorted = features.slice(0, 20).sort((a, b) => {
+                    return b.properties.tti - a.properties.tti
+                })
+                console.log(sorted)
+                sorted.forEach(f => {
+                    if(f.properties.tti > 1) {
+                        x.push(f.properties.tti)
+                        y.push(f.properties.name)
+                    }
+                })
+                
+                let chart = barChartRef.current
+                console.log(chart)
+                chart.data.datasets[0].data = x
+                chart.data.labels = y
+
+                chart.update();
+            })
+
+            fetch('/data/mobility/per_area_unserved_pop.json')
+            .then(res => res.json())
+            .then(res => {
+                let data = []
+                let fit = []
+                res.ward_list.forEach((w, i) => {
+                    data.push({
+                        x: res.pop_density[i],
+                        y: res.per_area_unserved[i],
+                        ward: w
+                    })
+                    fit.push({
+                        x: res.pop_density[i],
+                        y: res.fit_area_unserved[i]
+                    })
+                })
+                
+                let chart = scatterChartRef.current
+                chart.data.datasets[0].data = fit
+                chart.data.datasets[1].data = data
+
+                chart.update();
+            })
     }, [])
 
     function toggleLayer(id) {
@@ -347,6 +513,16 @@ function TransitRoute() {
                 {renderLegend('tti')}
             </div>
             <div className={styles.tooltip} ref={tooltipRef}></div>
+            <div className={styles.chart_tti}>
+                <Bar style={{
+                    height: '400px'
+                }} ref={barChartRef} options={barChart.options} data={barChart.data} />
+            </div>
+            <div className={styles.chart_pop_unserved}>
+                <Scatter style={{ 
+                    height: '200px'
+                }} ref={scatterChartRef} options={scatterChart.options} data={scatterChart.data} />
+            </div>
         </>
     )
 }

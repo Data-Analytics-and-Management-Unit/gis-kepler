@@ -70,3 +70,21 @@
     }
     
 }
+
+.chart_tti {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 999;
+    padding: 13px;
+    background-color: #fff;
+    border-radius: 5px;
+    canvas {
+        width: 300px;
+    }
+}
+
+.chart_pop_unserved {
+    @extend .chart_tti;
+    top: 450px;
+}
