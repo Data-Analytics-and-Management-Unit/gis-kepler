@@ -1,0 +1,332 @@
+{
+    "data": [
+        {
+            "value": "Surat",
+            "label": "Surat",
+            "type": "parent",
+            "children": [
+                {
+                    "value": "Demographic_Surat",
+                    "label": "Demographic",
+                    "type": "parent",
+                    "children": [
+                        {
+                            "value": "Surat_Ward",
+                            "label": "Ward Boundary",
+                            "type": "fill",
+                            "source": {
+                                "type": "geojson",
+                                "data": "/data/generic_layers/Surat_Ward.json"
+                            },
+                            "id": "Surat_Ward",
+                            "paint": {
+                                "fill-color": "red",
+                                "fill-opacity": 0.2
+                            },
+                            "layout": {
+                                "visibility": "none"
+                            },
+                            "filter": [
+                                "all"
+                            ]
+                        },
+                        {
+                            "value": "Surat_Zone",
+                            "label": "Zone Boundary",
+                            "type": "fill",
+                            "source": {
+                                "type": "geojson",
+                                "data": "/data/generic_layers/Zone.json"
+                            },
+                            "id": "Surat_Zone",
+                            "paint": {
+                                "fill-color": "blue",
+                                "fill-opacity": 0.2
+                            },
+                            "layout": {
+                                "visibility": "none"
+                            },
+                            "filter": [
+                                "all"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "value": "Surat_RoadNetwork",
+                    "label": "Road Network",
+                    "type": "parent",
+                    "children": [
+                        {
+                            "value": "Surat_Roads",
+                            "label": "Roads",
+                            "type": "line",
+                            "source": {
+                                "type": "geojson",
+                                "data": "/data/generic_layers/Roads.json"
+                            },
+                            "id": "Surat_Roads",
+                            "paint": {
+                                "line-color": "orange"
+                            },
+                            "layout": {
+                                "visibility": "none"
+                            },
+                            "filter": [
+                                "all"
+                            ]
+                        },
+                        {
+                            "value": "Surat_Footpaths",
+                            "label": "Footpaths",
+                            "type": "line",
+                            "source": {
+                                "type": "geojson",
+                                "data": "/data/generic_layers/Footpaths.json"
+                            },
+                            "id": "Surat_Footpaths",
+                            "paint": {
+                                "line-color": "pink"
+                            },
+                            "layout": {
+                                "visibility": "none"
+                            },
+                            "filter": [
+                                "all"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "value": "Surat_Water",
+                    "label": "Water",
+                    "type": "parent",
+                    "children": [
+                        {
+                            "value": "waste",
+                            "label": "Wastewater Drainage",
+                            "type": "line",
+                            "source": {
+                                "type": "geojson",
+                                "data": "/data/generic_layers/Waste.json"
+                            },
+                            "id": "waste",
+                            "paint": {
+                                "line-color": "brown"
+                            },
+                            "layout": {
+                                "visibility": "none"
+                            },
+                            "filter": [
+                                "all"
+                            ]
+                        },
+                        {
+                            "value": "storm",
+                            "label": "Storm Water Drainage",
+                            "type": "line",
+                            "source": {
+                                "type": "geojson",
+                                "data": "/data/generic_layers/Storm.json"
+                            },
+                            "id": "storm",
+                            "paint": {
+                                "line-color": "green"
+                            },
+                            "layout": {
+                                "visibility": "none"
+                            },
+                            "filter": [
+                                "all"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "value": "Varanasi",
+            "label": "Varanasi",
+            "type": "parent",
+            "children": [
+                {
+                    "value": "Demographic_Varanasi",
+                    "label": "Demographic",
+                    "type": "parent",
+                    "children": [
+                        {
+                            "value": "Varanasi_Ward",
+                            "label": "Ward Boundary",
+                            "type": "fill",
+                            "source": {
+                                "type": "geojson",
+                                "data": "/data/generic_layers/Varanasi_Ward.json"
+                            },
+                            "id": "Varanasi_Ward",
+                            "paint": {
+                                "fill-color": "red",
+                                "fill-opacity": 0.2
+                            },
+                            "layout": {
+                                "visibility": "none"
+                            },
+                            "filter": [
+                                "all"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "value": "Varanasi_RoadNetwork",
+                    "label": "Road Network",
+                    "type": "parent",
+                    "children": [
+                        {
+                            "value": "Varanasi_Bridges",
+                            "label": "Bridges",
+                            "type": "line",
+                            "source": {
+                                "type": "geojson",
+                                "data": "/data/generic_layers/Bridge_Varanasi.json"
+                            },
+                            "id": "Varanasi_Bridges",
+                            "paint": {
+                                "line-color": "orange"
+                            },
+                            "layout": {
+                                "visibility": "none"
+                            },
+                            "filter": [
+                                "all"
+                            ]
+                        },
+                        {
+                            "value": "Varanasi_Railway",
+                            "label": "Railway Lines",
+                            "type": "line",
+                            "source": {
+                                "type": "geojson",
+                                "data": "/data/generic_layers/Railway_Line.json"
+                            },
+                            "id": "Varanasi_Railway",
+                            "paint": {
+                                "line-color": "pink"
+                            },
+                            "layout": {
+                                "visibility": "none"
+                            },
+                            "filter": [
+                                "all"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "value": "Varanasi_Water",
+                    "label": "Water",
+                    "type": "parent",
+                    "children": [
+                        {
+                            "value": "Varanasi_Drainage",
+                            "label": "Drainage",
+                            "type": "line",
+                            "source": {
+                                "type": "geojson",
+                                "data": "/data/generic_layers/Drainage_Varanasi.json"
+                            },
+                            "id": "Varanasi_Drainage",
+                            "paint": {
+                                "line-color": "brown"
+                            },
+                            "layout": {
+                                "visibility": "none"
+                            },
+                            "filter": [
+                                "all"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "value": "Vadodara",
+            "label": "Vadodara",
+            "type": "parent",
+            "children": [
+                {
+                    "value": "Demographic_Vadodara",
+                    "label": "Demographic",
+                    "type": "parent",
+                    "children": [
+                        {
+                            "value": "Vadodara_Ward",
+                            "label": "Ward Boundary",
+                            "type": "fill",
+                            "source": {
+                                "type": "geojson",
+                                "data": "/data/generic_layers/Vadodara_Ward.json"
+                            },
+                            "id": "Vadodara_Ward",
+                            "paint": {
+                                "fill-color": "red",
+                                "fill-opacity": 0.2
+                            },
+                            "layout": {
+                                "visibility": "none"
+                            },
+                            "filter": [
+                                "all"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "value": "Vadodara_RoadNetwork",
+                    "label": "Road Network",
+                    "type": "parent",
+                    "children": [
+                        {
+                            "value": "Vadodara_Bridges",
+                            "label": "Bridges",
+                            "type": "line",
+                            "source": {
+                                "type": "geojson",
+                                "data": "/data/generic_layers/Vadodara_Bridges.json"
+                            },
+                            "id": "Vadodara_Bridges",
+                            "paint": {
+                                "line-color": "orange"
+                            },
+                            "layout": {
+                                "visibility": "none"
+                            },
+                            "filter": [
+                                "all"
+                            ]
+                        },
+                        {
+                            "value": "Vadodara_Footpaths",
+                            "label": "Footpaths",
+                            "type": "line",
+                            "source": {
+                                "type": "geojson",
+                                "data": "/data/generic_layers/Vadodara_Footpaths.json"
+                            },
+                            "id": "Vadodara_Footpaths",
+                            "paint": {
+                                "line-color": "pink"
+                            },
+                            "layout": {
+                                "visibility": "none"
+                            },
+                            "filter": [
+                                "all"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

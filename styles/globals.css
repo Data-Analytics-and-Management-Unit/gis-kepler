@@ -33,3 +33,24 @@ a {
   width: 100%;
   height: 100%;
 }
+
+span.rct-node-icon {
+  color: #fff;
+}
+
+.rct-collapse *,
+.rct-checkbox *,
+.rct-node-icon * {
+  display: inline-block;
+  margin: 0;
+  width: 17px;
+}
+
+.rct-title {
+  position: relative;
+  top: -6px;
+}
+
+.maplibregl-popup-content {
+  color: #191919;
+}

@@ -12,14 +12,18 @@
   "dependencies": {
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
+    "@mui/icons-material": "^5.10.9",
     "@mui/material": "^5.10.3",
     "@turf/turf": "^6.5.0",
+    "babel-plugin-macros": "^3.1.0",
     "chart.js": "^3.9.1",
     "kepler.gl": "2.5.5",
     "maplibre-gl": "^2.1.9",
     "next": "11.0.1",
     "react": "^16.8.4",
     "react-chartjs-2": "^4.3.1",
+    "react-checkbox-tree": "^1.8.0",
+    "react-checkbox-tree-reorderable": "^1.7.3",
     "react-dom": "^16.8.4",
     "styled-components": "^5.3.0"
   },
