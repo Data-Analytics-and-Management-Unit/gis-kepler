@@ -8,6 +8,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
+import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Divider from '@mui/material/Divider';
@@ -17,6 +18,7 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import LayersIcon from '@mui/icons-material/Layers';
 import ApiIcon from '@mui/icons-material/Api';
 import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
+import TextField from '@mui/material/TextField';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { solid, regular, brands, icon } from '@fortawesome/fontawesome-svg-core/import.macro';
 
@@ -47,6 +49,10 @@ function Checklist(props) {
         setOrderNodes(orderedNodes);
     }
 
+    function onCheckboxClick(e) {
+        props.clickCallback(e)
+    }
+
     return (
 
         <CheckboxTree
@@ -56,6 +62,7 @@ function Checklist(props) {
             expanded={expanded}
             onCheck={handleCheck}
             onExpand={handleExpanded}
+            onClick={onCheckboxClick}
             orderable={true}
             onOrderChange={onOrderChange}
 
@@ -109,7 +116,7 @@ function Checklist(props) {
 
 function Sidebar(props) {
 
-    const drawerWidth = 500;
+    const drawerWidth = 400;
 
     const darkTheme = createTheme({
         palette: {
@@ -185,7 +192,7 @@ function Sidebar(props) {
                 <AppBar position="fixed" open={open}>
                     <Toolbar>
                         <Typography variant="h6" noWrap sx={{ flexGrow: 1 }} component="div" />
-                            <h3>India Urban Observatory | GIS Explorer</h3>
+                            <h3 className={styles.page_header}><span>India Urban Observatory &nbsp; </span> GIS Explorer</h3>
 
                         <IconButton
                             color="inherit"
@@ -198,10 +205,10 @@ function Sidebar(props) {
                         </IconButton>
                     </Toolbar>
                 </AppBar>
-                <Main open={open}>
+                {/* <Main open={open}>
                     <DrawerHeader />
 
-                </Main>
+                </Main> */}
                 <Drawer
                     sx={{
                         width: drawerWidth,
@@ -217,39 +224,47 @@ function Sidebar(props) {
                 >
                     <DrawerHeader>
                         <IconButton onClick={handleDrawerClose}>
-                            {theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                            {theme.direction === 'rtl' ? <ChevronLeftIcon /> : <MenuOpenIcon />}
                         </IconButton>
+                        <h3>Data Layers</h3>
                     </DrawerHeader>
                     <Divider />
-                    <div className={styles.data_heading}>
-                        <Typography variant="h6">
-                            Custom Data
+                    {/* <div className={styles.data_heading}>
+                        <Typography variant="h6" sx={{textAlign: 'left', padding: '0 38px'}}>
+                            City Data
                         </Typography>
-                    </div>
-                    <Divider />
+                    </div> */}
                     <div className={styles.custom_data}>
+                        <TextField 
+                            id="outlined-basic" 
+                            label="Search Layers" 
+                            variant="outlined" 
+                            fullWidth 
+                            sx={{marginBottom: '10px'}}
+                        />
                         <Checklist
                             data={data.data}
                             handleCheck={props.handleCheck}
                             checked={props.checked}
+                            clickCallback={props.clickCallback}
                         />
                     </div>
                     <Divider />
-                    <div className={styles.data_heading}>
-                        <Typography variant="h6">
-                            Base Data
-                        </Typography>
-                    </div>
-                    <Divider />
+                    
                     <div className={styles.custom_data}>
-                    <Checklist
-                        data={layers.layers}
-                        handleCheck={props.handleCheckBase}
-                        checked={props.checkedBase}
-
-
-                    />
+                        <div className={styles.data_heading}>
+                            <Typography variant="h6">
+                                Base Data
+                            </Typography>
                         </div>
+                        <Checklist
+                            data={layers.layers}
+                            handleCheck={props.handleCheckBase}
+                            checked={props.checkedBase}
+
+
+                        />
+                    </div>
 
                     <Divider />
 

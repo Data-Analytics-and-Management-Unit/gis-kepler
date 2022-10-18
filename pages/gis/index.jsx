@@ -9,6 +9,7 @@ function Gis() {
 	const [checked, setChecked] = useState([]);
 	const [checkedBase, setcheckedBase] = useState([]);
 	const [baseMapLayers, setBaseMapLayers] = useState([]);
+	const [sidebarClickState, setSidebarClickState] = useState(undefined);
 	const mapStyle = '/styles/mute.json'
 
 	function handleCheck(checked) {
@@ -42,13 +43,14 @@ function Gis() {
 			checkedBase = {checkedBase}
 			style={mapStyle}
 			baseMapLayers={baseMapLayers}
+			sidebarClickState={sidebarClickState}
 		/>
 		<Sidebar
 			handleCheck={handleCheck}
 			checked={checked}
 			handleCheckBase={handleCheckBase}
 			checkedBase={checkedBase}
-			
+			clickCallback={setSidebarClickState}
 		/>
 		</div>
 	)

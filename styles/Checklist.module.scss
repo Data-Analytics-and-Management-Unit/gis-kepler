@@ -1,6 +1,5 @@
 .custom_data{
-    padding: 5% 10%;
-    
+    padding: 30px 30px;
     line-height: 1.7;
 }
 
@@ -9,6 +8,14 @@ color: #423F3E;
 }
 
 .data_heading{
-    text-align: center;
-    padding: 2%;
+    text-align: left;
+    padding: 0 10px;
+    padding-bottom: 10px;
+}
+
+.page_header {
+    width: 100%;
+    span {
+        font-weight: 100;
+    }
 }

@@ -46,6 +46,10 @@ span.rct-node-icon {
   width: 17px;
 }
 
+.ct-checkbox {
+  padding-top: 7px;
+}
+
 .rct-title {
   position: relative;
   top: -6px;
@@ -53,4 +57,13 @@ span.rct-node-icon {
 
 .maplibregl-popup-content {
   color: #191919;
+}
+
+.rct-node-clickable {
+  padding-top: 6px;
+}
+
+.rct-node-clickable:hover {
+  background: #1f1f1f;
+  /* padding-top: 5px; */
 }

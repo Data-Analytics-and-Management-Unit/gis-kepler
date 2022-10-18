@@ -32,30 +32,43 @@ export default function Map(props) {
   	traverse(data.data);
 
 	useEffect(() => {
-		console.log(props.checked)
-		console.log(map.current)
+		if(props.sidebarClickState) {
+			console.log(map.current.getSource(props.sidebarClickState.value))
+		}
+	}, [props.sidebarClickState])
+
+	useEffect(() => {
+		// console.log(props.checked)
+		// console.log(map.current)
 		if (map.current) {
 
-			console.log(props.checked)
+			console.log('in map current')
+
+			// console.log(props.checked)
 
 
 			// map.current.on('load', () => {
 
-				console.log(props.checked)
+				// console.log(props.checked)
 
 				let baseLayers = props.baseMapLayers.layers
 
 				// layerConcat = layerList.concat()
 
+				
+				
 				// Toggle Fuctionality for custom data
 				for (var i = 0; i < layerList.length; i++) {
-					if (props.checked.includes(layerList[i].value)) {
-						map.current.setLayoutProperty(layerList[i].value, 'visibility', 'visible');
+					if(map.current.getLayer(layerList[i].value)) {
+						if (props.checked.includes(layerList[i].value)) {
+							map.current.setLayoutProperty(layerList[i].value, 'visibility', 'visible');
+						}
+						else {
+							map.current.setLayoutProperty(layerList[i].value, 'visibility', 'none');
+						};
 					}
-					else {
-						map.current.setLayoutProperty(layerList[i].value, 'visibility', 'none');
-					};
 				}
+				
 
 				//Toggle functionality for basemap data
 				for (var i = 0; i < baseLayers.length; i++) {
