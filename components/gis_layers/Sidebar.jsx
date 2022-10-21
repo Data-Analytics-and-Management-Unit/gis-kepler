@@ -22,10 +22,12 @@ import TextField from '@mui/material/TextField';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { solid, regular, brands, icon } from '@fortawesome/fontawesome-svg-core/import.macro';
 
+import data from '../../public/data/generic_layers/layers.json';
+
 import styles from "../../styles/Checklist.module.scss";
 
-import data from "./data.json";
 import layers from "../../public/styles/mute.json";
+import { useEffect } from "react";
 
 for (var i = 0; i < layers.layers.length; i++) {
     layers.layers[i].label = layers.layers[i].id;
@@ -52,6 +54,10 @@ function Checklist(props) {
     function onCheckboxClick(e) {
         props.clickCallback(e)
     }
+
+    useEffect(() => {
+        setOrderNodes(props.data);
+    }, [props.data])
 
     return (
 
@@ -174,6 +180,8 @@ function Sidebar(props) {
 
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
+    const [searchInput, setSearchInput] = useState('');
+    const [filteredTree, setFilteredTree] = useState()
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -183,6 +191,50 @@ function Sidebar(props) {
         setOpen(false);
     };
 
+    function handleSearchInputChange(e) {
+        setSearchInput(e.target.value)
+    }
+
+    function filterTree(node, searchString) {
+        // console.log(node)
+        if(node.label.toLocaleLowerCase().indexOf(searchString) > -1) {
+            return node
+        }
+
+        if(node.type === 'parent') {
+            let c = []
+            node.children.forEach(n => {
+                let filteredN = filterTree(n, searchString)
+                if(filteredN) {
+                    c.push(filteredN)
+                }
+            })
+
+            if(c.length > 0) {
+                node.children = c
+                return node
+            }
+        }
+    }
+
+    useEffect(() => {
+        if(searchInput === '') {
+            setFilteredTree(props.layersData.data)
+        } else {
+            let fNodes = filterTree({
+                type: 'parent',
+                label: 'root',
+                children: props.layersData.data
+            }, searchInput.toLowerCase())
+
+            setFilteredTree(fNodes.children || [])
+        }
+    }, [searchInput])
+
+    useEffect(() => {
+        console.log(props.layersData)
+        setFilteredTree(props.layersData.data)
+    }, [props.layersData])
 
     return (
         <ThemeProvider theme={darkTheme}>
@@ -241,13 +293,15 @@ function Sidebar(props) {
                             variant="outlined" 
                             fullWidth 
                             sx={{marginBottom: '10px'}}
+                            onChange={handleSearchInputChange}
                         />
-                        <Checklist
-                            data={data.data}
+                        {filteredTree && <Checklist
+                            data={filteredTree}
                             handleCheck={props.handleCheck}
                             checked={props.checked}
                             clickCallback={props.clickCallback}
-                        />
+                            showExpandAll
+                        />}
                     </div>
                     <Divider />
                     

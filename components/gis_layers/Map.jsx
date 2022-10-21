@@ -2,9 +2,6 @@ import React, { useRef, useEffect, useState } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import styles from '../../styles/Map.module.scss';
-import Layer from './layer';
-import data from "./data.json";
-// import layers from "../mapStyle.json"
 
 export default function Map(props) {
 	//Initialize state
@@ -14,22 +11,26 @@ export default function Map(props) {
 	const [lng] = useState(80);
 	const [lat] = useState(24);
 	const [zoom] = useState(4);
-	var layerList = [];
-
+	const layerListRef = useRef([]);
 
 	//Generating list of layer objects
-	function traverse(arr) {
+	function traverse(arr, l) {
 		for (var i = 0; i < arr.length; i++) {
 			if (arr[i].type === "parent") {
-				traverse(arr[i].children);
+				traverse(arr[i].children, l);
 			}
 			else {
-				layerList.push(arr[i]);
+				l.push(arr[i]);
 			}
 		}
 	}
 
-  	traverse(data.data);
+	useEffect(() => {
+		let l = []
+		console.log(props.layersData)
+		traverse(props.layersData.data, l);
+		layerListRef.current = l
+	}, [props.layersData])
 
 	useEffect(() => {
 		if(props.sidebarClickState) {
@@ -40,7 +41,7 @@ export default function Map(props) {
 	useEffect(() => {
 		// console.log(props.checked)
 		// console.log(map.current)
-		if (map.current) {
+		if (map.current && map.current.isStyleLoaded()) {
 
 			console.log('in map current')
 
@@ -55,7 +56,9 @@ export default function Map(props) {
 
 				// layerConcat = layerList.concat()
 
-				
+				let layerList = layerListRef.current;
+
+				console.log(props.checked, layerList)
 				
 				// Toggle Fuctionality for custom data
 				for (var i = 0; i < layerList.length; i++) {
@@ -66,6 +69,8 @@ export default function Map(props) {
 						else {
 							map.current.setLayoutProperty(layerList[i].value, 'visibility', 'none');
 						};
+					} else {
+						console.log('No layer with id ' + layerList[i].value)
 					}
 				}
 				
@@ -84,43 +89,7 @@ export default function Map(props) {
 			return;
 		} //stops map from intializing more than once
 
-		let m = new maplibregl.Map({
-			container: mapContainer.current,
-			style: props.style,
-			center: [lng, lat],
-			zoom: zoom
-		});
-		m.addControl(new maplibregl.NavigationControl(), 'top-right');
-
-		map.current = m;
-
-		//Generating layers
-
-		// console.log(layerList)
-
-		m.on('load', () => {
-			for (var i = 0; i < layerList.length; i++) {
-				m.addLayer({
-					'id': layerList[i].id,
-					'type': layerList[i].type,
-					'source': layerList[i].source,
-					'source-layer': '',
-					'metadata': {},
-					'minzoom': 0,
-					'paint': layerList[i].paint,
-					'layout': layerList[i].layout,
-					'filter': layerList[i].filter
-				}, 'waterway_tunnel')
-				// console.log(layerList[i].id)
-
-				m.on('click', layerList[i].id, (e) => {
-					new maplibregl.Popup()
-						.setLngLat(e.lngLat)
-						.setHTML(`<p> Name: ${e.features[0].properties.Name_1}</p><p>No: ${e.features[0].properties.No}</p>`)
-						.addTo(m);
-				});
-			}
-		})
+		
 
 		
 
@@ -133,6 +102,47 @@ export default function Map(props) {
 		// }
 	}, [props.checked, props.checkedBase]);
   	//Set baseMap layers checked by default
+
+	useEffect(() => {
+		let m = new maplibregl.Map({
+			container: mapContainer.current,
+			style: props.style,
+			center: [lng, lat],
+			zoom: zoom
+		});
+		m.addControl(new maplibregl.NavigationControl(), 'top-right');
+		map.current = m;
+
+		m.on('load', () => {
+			let layerList = layerListRef.current;
+			for (var i = 0; i < layerList.length; i++) {
+				let beforeId = 'waterway_tunnel'
+				if(layerList[i].type == 'line') {
+					beforeId = 'road_label'
+				}
+
+				m.addLayer({
+					'id': layerList[i].id,
+					'type': layerList[i].type,
+					'source': layerList[i].source,
+					'source-layer': '',
+					'metadata': {},
+					'minzoom': 0,
+					'paint': layerList[i].paint,
+					'layout': layerList[i].layout,
+					'filter': layerList[i].filter
+				}, beforeId)
+				// console.log(layerList[i].id)
+
+				m.on('click', layerList[i].id, (e) => {
+					new maplibregl.Popup()
+						.setLngLat(e.lngLat)
+						.setHTML(`<p> Name: ${e.features[0].properties.Name_1}</p><p>No: ${e.features[0].properties.No}</p>`)
+						.addTo(m);
+				});
+			}
+		})
+	}, [layerListRef.current])
 
 	return (
 		<div className={styles.map_container}>
