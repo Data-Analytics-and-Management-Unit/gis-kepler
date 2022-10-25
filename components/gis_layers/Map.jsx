@@ -58,7 +58,7 @@ export default function Map(props) {
 
 				let layerList = layerListRef.current;
 
-				console.log(props.checked, layerList)
+				console.log(props.checked, props.checkedBase, layerList)
 				
 				// Toggle Fuctionality for custom data
 				for (var i = 0; i < layerList.length; i++) {
@@ -104,44 +104,46 @@ export default function Map(props) {
   	//Set baseMap layers checked by default
 
 	useEffect(() => {
-		let m = new maplibregl.Map({
-			container: mapContainer.current,
-			style: props.style,
-			center: [lng, lat],
-			zoom: zoom
-		});
-		m.addControl(new maplibregl.NavigationControl(), 'top-right');
-		map.current = m;
+		if(!map.current) {
+			let m = new maplibregl.Map({
+				container: mapContainer.current,
+				style: props.style,
+				center: [lng, lat],
+				zoom: zoom
+			});
+			m.addControl(new maplibregl.NavigationControl(), 'top-right');
+			map.current = m;
 
-		m.on('load', () => {
-			let layerList = layerListRef.current;
-			for (var i = 0; i < layerList.length; i++) {
-				let beforeId = 'waterway_tunnel'
-				if(layerList[i].type == 'line') {
-					beforeId = 'road_label'
+			m.on('load', () => {
+				let layerList = layerListRef.current;
+				for (var i = 0; i < layerList.length; i++) {
+					let beforeId = 'waterway_tunnel'
+					if(layerList[i].type == 'line') {
+						beforeId = 'road_label'
+					}
+
+					m.addLayer({
+						'id': layerList[i].id,
+						'type': layerList[i].type,
+						'source': layerList[i].source,
+						'source-layer': '',
+						'metadata': {},
+						'minzoom': 0,
+						'paint': layerList[i].paint,
+						'layout': layerList[i].layout,
+						'filter': layerList[i].filter
+					}, beforeId)
+					// console.log(layerList[i].id)
+
+					m.on('click', layerList[i].id, (e) => {
+						new maplibregl.Popup()
+							.setLngLat(e.lngLat)
+							.setHTML(`<p> Name: ${e.features[0].properties.Name_1}</p><p>No: ${e.features[0].properties.No}</p>`)
+							.addTo(m);
+					});
 				}
-
-				m.addLayer({
-					'id': layerList[i].id,
-					'type': layerList[i].type,
-					'source': layerList[i].source,
-					'source-layer': '',
-					'metadata': {},
-					'minzoom': 0,
-					'paint': layerList[i].paint,
-					'layout': layerList[i].layout,
-					'filter': layerList[i].filter
-				}, beforeId)
-				// console.log(layerList[i].id)
-
-				m.on('click', layerList[i].id, (e) => {
-					new maplibregl.Popup()
-						.setLngLat(e.lngLat)
-						.setHTML(`<p> Name: ${e.features[0].properties.Name_1}</p><p>No: ${e.features[0].properties.No}</p>`)
-						.addTo(m);
-				});
-			}
-		})
+			})
+		}
 	}, [layerListRef.current])
 
 	return (
