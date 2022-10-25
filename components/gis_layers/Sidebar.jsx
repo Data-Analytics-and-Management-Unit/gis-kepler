@@ -30,9 +30,9 @@ import layers from "../../public/styles/mute.json";
 import { useEffect } from "react";
 
 for (var i = 0; i < layers.layers.length; i++) {
+    layers.layers[i].id = layers.layers[i].id.replace('-', '_')
     layers.layers[i].label = layers.layers[i].id;
     layers.layers[i].value = layers.layers[i].id;
-    
 }
 
 
@@ -217,6 +217,30 @@ function Sidebar(props) {
         }
     }
 
+    function groupBaseLayers(layers) {
+        let groupObj = {}
+        let layerList = []
+        layers.forEach(l => {
+            let g = l.value.split('_')[0]
+
+            if(!groupObj[g]) {
+                groupObj[g] = {
+                    value: g + '_grp',
+                    label: g,
+                    children: []
+                }
+            }
+
+            groupObj[g].children.push(l)
+        })
+
+        for(const [_, v] of Object.entries(groupObj)) {
+            layerList.push(v)
+        }
+
+        return layerList
+    }
+
     useEffect(() => {
         if(searchInput === '') {
             setFilteredTree(props.layersData.data)
@@ -308,11 +332,11 @@ function Sidebar(props) {
                     <div className={styles.custom_data}>
                         <div className={styles.data_heading}>
                             <Typography variant="h6">
-                                Base Data
+                                Base Layers
                             </Typography>
                         </div>
                         <Checklist
-                            data={layers.layers}
+                            data={groupBaseLayers(layers.layers)}
                             handleCheck={props.handleCheckBase}
                             checked={props.checkedBase}
 
