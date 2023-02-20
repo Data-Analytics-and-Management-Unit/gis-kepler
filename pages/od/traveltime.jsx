@@ -194,10 +194,8 @@ function TravelTime() {
                 })
         
                 map.on('click', 'ward_layer', e => {
-                    
                     let id = e.features[0].properties.id
                     mapClickIdRef.current = id
-                    //console.log(e.features[0])
 
                     fromPlace.current = e.features[0].properties.name
 
@@ -309,8 +307,8 @@ function TravelTime() {
             return
         }
 
-        //console.log(mode, stats)
-        //console.log(mapRef.current.getSource('ward'))
+        console.log(mode, stats)
+
         fetch(apiEndpointPartialdata + '?id=' + id + '&mode=' + mode + '&stats=' + stats)
         .then(res => res.json())
         .then(partialData => {
