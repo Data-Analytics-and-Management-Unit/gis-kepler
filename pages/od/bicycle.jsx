@@ -174,13 +174,12 @@ function Bicycle() {
 
                     let d_time = e.features[0].properties.diff_time / 3600
                     let speed = distance / time
-                    let n_time = d_dist / speed
                     let speedTag = speed.toFixed(1) + ' kmph'
                     fromPlaceRef.current.innerHTML = 'From ' + (fromPlace.current || initWard.bangalore.ward_name) + ' to'
                     toPlaceRef.current.innerHTML = e.features[0].properties.name
                     distanceRef.current.innerHTML = d_dist.toFixed(1) + ' km'
                     speedTagRef.current.innerHTML = speedTag
-                    timeRef.current.innerHTML = renderTime(n_time)
+                    timeRef.current.innerHTML = renderTime(d_time)
                     
                 })
                 map.on('mouseleave', 'ward_layer', function (e) {
