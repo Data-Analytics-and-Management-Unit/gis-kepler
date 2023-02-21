@@ -66,6 +66,74 @@
     }
 }
 
+.comparison_info_box {
+    position: absolute;
+    display: none;
+    max-width: 300px;
+    bottom: 10px;
+    left: 320px;
+    padding: 10px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    font-size: 0.6rem;
+
+    h2, h3 {
+        margin: 0;
+    }
+
+    h2 {
+        font-size: 2rem;
+    }
+
+    h3 {
+        font-size: 1.5rem;
+    }
+
+    p {
+        font-size: 1rem;
+        margin: 0;
+    }
+    .imp_info_container {
+        h2 {
+            min-height: 80px;
+        }
+    }
+    .stats_box {
+        margin: 20px 0px;
+
+        .speed_tag_container {
+            display: flex;
+            align-items: center;
+            div {
+                margin-right: 20px;
+            }
+            img {
+                width: 50px;
+                display: inline-block;
+            }
+            p {
+                display: inline-block;
+            }
+            h3 {
+                display: block;
+            }
+        }
+        .cost_container {
+            display: flex;
+            margin: 20px 0;
+            .cost_item {
+                flex: 1;
+                p {
+                    font-size: 0.7rem;   
+                }
+                h3 {
+                    font-size: 1.3rem;
+                }
+            }
+        }
+    }
+}
+
 .iuo_title {
     position: absolute;
     top: 10px;

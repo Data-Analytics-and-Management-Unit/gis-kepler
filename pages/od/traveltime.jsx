@@ -33,8 +33,12 @@ function TravelTime() {
     const evCo2Ref = useRef();
     const evCostRef = useRef();
     const transitCostRef = useRef();
-
-    
+    const wardDataRef = useRef();
+    const wardDrivingRef = useRef();
+    const wardTransitRef = useRef();
+    const speedTransitRef = useRef();
+    const speedDrivingRef = useRef();
+    const comparisonInfoBoxRef = useRef();
 
     const [modeState, setModeState] = useState('driving');
     const [statsState, setStatsState] = useState('average_travel_time');
@@ -76,6 +80,7 @@ function TravelTime() {
         mode.current = e.target.value
         setModeState(e.target.value)
         infoBoxRef.current.style.display = 'none'
+        comparisonInfoBoxRef.current.style.display = 'none'
 
         if(e.target.value == 'transit') {
             stats.current = 'average_travel_time'
@@ -88,9 +93,11 @@ function TravelTime() {
         stats.current = e.target.value
         setStatsState(e.target.value)
         infoBoxRef.current.style.display = 'none'
+        comparisonInfoBoxRef.style.display = 'none'
     }
 
     useEffect(() => {
+        
         let map = new maplibre.Map({
             container: mapContainerRef.current,
             style: '/styles/mute.json',
@@ -101,9 +108,19 @@ function TravelTime() {
 
         mapClickIdRef.current = initWard.bangalore.ward_no
         let dataPromise = fetch(apiEndpointFulldata + '?id=' + initWard.bangalore.ward_no + '&mode=' + mode.current + '&stats=' + stats.current)
-
+        let wardDrivingPromise = fetch('/data/driving_data/ward_wise_data_driving.json')
+        let wardTransitPromise = fetch('/data/transit_data/ward_wise_data_transit.json')
+        let wardPromise = fetch('/data/cycle_data/ward_wise_data.json')
         map.on('load', () => {
-
+            wardPromise.then(res => res.json()).then(wardData=>{
+                wardDataRef.current = wardData
+            })
+            wardDrivingPromise.then(res=>res.json()).then(wardDrivingData=>{
+                wardDrivingRef.current = wardDrivingData
+            })
+            wardTransitPromise.then(res=>res.json()).then(wardTransitData=>{
+                wardTransitRef.current = wardTransitData
+            })
             dataPromise
                 .then(res => res.json())
                 .then(completeData => {
@@ -212,8 +229,11 @@ function TravelTime() {
                     //         }
                     //         map.getSource('ward').setData(completeData);
                     //     })
-
-                    fetchNewData(id, mode.current, stats.current)
+                    if (mode.current !=='bicycle'){
+                        fetchNewData(id, mode.current, stats.current)
+                    } else {
+                        fetchNewBicycleData(id)
+                    }
                 });
         
                 map.on('mouseenter', 'ward_layer', function (e) {
@@ -223,75 +243,173 @@ function TravelTime() {
 
                 map.on('mousemove', 'ward_layer', (e) => {
                     infoBoxRef.current.style.display = 'block'
+                    
                     // infoBoxRef.current.style.top = e.point.y + 'px'
                     // infoBoxRef.current.style.left = e.point.x + 'px'
 
                     // console.log(infoBoxRef.current.style)
 
                     // Paper: http://ijtte.com/uploads/2015-12-22/935be804-3a4a-3e79IJTTE_Vol%205(4)_10.pdf
+                    if (mode.current==='driving'){
+                        let dieselPrice = 95 // Rs / L
+                        let petrolPrice = 110 // Rs / L
 
-                    let dieselPrice = 95 // Rs / L
-                    let petrolPrice = 110 // Rs / L
+                        let petrolCo2Emission = 2347.69813574 // grams CO2 / L
+                        let dieselCo2Emission = 2689.27276041 // grams CO2 / L
+                        let electricCo2Emission = 57.6699029126 // grams CO2 / km
 
-                    let petrolCo2Emission = 2347.69813574 // grams CO2 / L
-                    let dieselCo2Emission = 2689.27276041 // grams CO2 / L
-                    let electricCo2Emission = 57.6699029126 // grams CO2 / km
+                        let time = e.features[0].properties.time / 3600
+                        let distance = e.features[0].properties.distance / 1000
+                        let speed = distance / time
+                        // 5000 mm / km of roughness
+                        let steadyStateFuelConsumptionPetrol = 30 + 844.085 / speed + 0.003 * speed ** 2 + 0.001 * 5000
+                        let steadyStateFuelConsumptionDiesel = 35 + 983.503 / speed + 0.002 * speed ** 2 + 0.001 * 5000
 
-                    let time = e.features[0].properties.time / 3600
-                    let distance = e.features[0].properties.distance / 1000
-                    let speed = distance / time
-                    // 5000 mm / km of roughness
-                    let steadyStateFuelConsumptionPetrol = 30 + 844.085 / speed + 0.003 * speed ** 2 + 0.001 * 5000
-                    let steadyStateFuelConsumptionDiesel = 35 + 983.503 / speed + 0.002 * speed ** 2 + 0.001 * 5000
+                        let petrolCongestionFactor = 0.0003 * speed ** 2 - 0.0344 * speed + 1.9555
+                        let dieselCongestionFactor = 0.0005 * speed ** 2 - 0.0609 * speed + 2.8175
 
-                    let petrolCongestionFactor = 0.0003 * speed ** 2 - 0.0344 * speed + 1.9555
-                    let dieselCongestionFactor = 0.0005 * speed ** 2 - 0.0609 * speed + 2.8175
+                        let petrolConsumption = steadyStateFuelConsumptionPetrol * distance / 1000 // in L
+                        let dieselConsumption = steadyStateFuelConsumptionDiesel * distance / 1000 // in L
 
-                    let petrolConsumption = steadyStateFuelConsumptionPetrol * distance / 1000 // in L
-                    let dieselConsumption = steadyStateFuelConsumptionDiesel * distance / 1000 // in L
+                        petrolConsumption = petrolConsumption * petrolCongestionFactor
+                        dieselConsumption = dieselConsumption * dieselCongestionFactor
 
-                    petrolConsumption = petrolConsumption * petrolCongestionFactor
-                    dieselConsumption = dieselConsumption * dieselCongestionFactor
+                        let petrolCo2 = petrolConsumption * petrolCo2Emission
+                        let diesellCo2 = dieselConsumption * dieselCo2Emission
 
-                    let petrolCo2 = petrolConsumption * petrolCo2Emission
-                    let diesellCo2 = dieselConsumption * dieselCo2Emission
+                        let speedTag = speed.toFixed(1) + ' kmph'
+                        // let petrolCost = '<p>Petrol Cost: ₹ ' + (e.features[0].properties.distance / 1000 * 4.35).toFixed(1) + '</p>'
+                        let petrolCost = (petrolConsumption * petrolPrice).toFixed(1)
+                        let dieselCost = (steadyStateFuelConsumptionDiesel * distance / 1000 * dieselPrice).toFixed(1)
+                        let evCost = (distance * 1.17).toFixed(1)
+                        let transitCost = e.features[0].properties.fare
 
-                    let speedTag = speed.toFixed(1) + ' kmph'
-                    // let petrolCost = '<p>Petrol Cost: ₹ ' + (e.features[0].properties.distance / 1000 * 4.35).toFixed(1) + '</p>'
-                    let petrolCost = (petrolConsumption * petrolPrice).toFixed(1)
-                    let dieselCost = (steadyStateFuelConsumptionDiesel * distance / 1000 * dieselPrice).toFixed(1)
-                    let evCost = (distance * 1.17).toFixed(1)
-                    let transitCost = e.features[0].properties.fare
+                        let petrolConsumptionTag = petrolConsumption.toFixed(1) + ' L'
+                        let dieselConsumptionTag = dieselConsumption.toFixed(1) + ' L'
+                        
+                        let petrolCo2Tag = (petrolCo2 / 1000).toFixed(1) + ' kg'
+                        let dieselCo2Tag = (diesellCo2 / 1000).toFixed(1) + ' kg'
+                        let electricCo2Tag = (electricCo2Emission * distance / 1000).toFixed(1) + ' kg'
 
-                    let petrolConsumptionTag = petrolConsumption.toFixed(1) + ' L'
-                    let dieselConsumptionTag = dieselConsumption.toFixed(1) + ' L'
+                        
+
+                        // infoBoxRef.current.innerHTML = '<p> From ' + fromPlace.current + ' to</p>' + '<h2>' + e.features[0].properties.name + '</h2>' + '<h3>' + renderTime(time) + '</h3>' + speedTag + petrolCost + dieselCost + evCost + petrolConsumptionTag + dieselConsumptionTag + petrolCo2Tag + dieselCo2Tag + electricCo2Tag
                     
-                    let petrolCo2Tag = (petrolCo2 / 1000).toFixed(1) + ' kg'
-                    let dieselCo2Tag = (diesellCo2 / 1000).toFixed(1) + ' kg'
-                    let electricCo2Tag = (electricCo2Emission * distance / 1000).toFixed(1) + ' kg'
+                        fromPlaceRef.current.innerHTML = 'From ' + (fromPlace.current || initWard.bangalore.ward_name) + ' to'
+                        toPlaceRef.current.innerHTML = e.features[0].properties.name
+                        timeRef.current.innerHTML = renderTime(time)
+                        distanceRef.current.innerHTML = distance.toFixed(1) + ' km'
+                        speedTagRef.current.innerHTML = speedTag
+                        
+                        if(mode.current === 'driving') {
+                            petrolCostRef.current.innerHTML = petrolCost
+                            dieselCostRef.current.innerHTML = dieselCost
+                            evCostRef.current.innerHTML = evCost
+                            petrolConRef.current.innerHTML = petrolConsumptionTag
+                            dieselConRef.current.innerHTML = dieselConsumptionTag
+                            petrolCo2Ref.current.innerHTML = petrolCo2Tag
+                            dieselCo2Ref.current.innerHTML = dieselCo2Tag
+                            evCo2Ref.current.innerHTML = electricCo2Tag
+                        } else if(mode.current === 'transit') {
+                            transitCostRef.current.innerHTML = 'Rs ' + transitCost
+                        }
+                    } else if (mode.current ==='transit'){
+                        comparisonInfoBoxRef.current.style.display = 'block'
+                        let dieselPrice = 95 // Rs / L
+                        let petrolPrice = 110 // Rs / L
 
-                    
+                        let petrolCo2Emission = 2347.69813574 // grams CO2 / L
+                        let dieselCo2Emission = 2689.27276041 // grams CO2 / L
+                        let electricCo2Emission = 57.6699029126 // grams CO2 / km
 
-                    // infoBoxRef.current.innerHTML = '<p> From ' + fromPlace.current + ' to</p>' + '<h2>' + e.features[0].properties.name + '</h2>' + '<h3>' + renderTime(time) + '</h3>' + speedTag + petrolCost + dieselCost + evCost + petrolConsumptionTag + dieselConsumptionTag + petrolCo2Tag + dieselCo2Tag + electricCo2Tag
-                
-                    fromPlaceRef.current.innerHTML = 'From ' + (fromPlace.current || initWard.bangalore.ward_name) + ' to'
-                    toPlaceRef.current.innerHTML = e.features[0].properties.name
-                    timeRef.current.innerHTML = renderTime(time)
-                    distanceRef.current.innerHTML = distance.toFixed(1) + ' km'
-                    speedTagRef.current.innerHTML = speedTag
+                        let time = e.features[0].properties.time / 3600
+                        let distance = e.features[0].properties.distance / 1000
+                        let speed = distance / time
+                        // 5000 mm / km of roughness
+                        let steadyStateFuelConsumptionPetrol = 30 + 844.085 / speed + 0.003 * speed ** 2 + 0.001 * 5000
+                        let steadyStateFuelConsumptionDiesel = 35 + 983.503 / speed + 0.002 * speed ** 2 + 0.001 * 5000
+
+                        let petrolCongestionFactor = 0.0003 * speed ** 2 - 0.0344 * speed + 1.9555
+                        let dieselCongestionFactor = 0.0005 * speed ** 2 - 0.0609 * speed + 2.8175
+
+                        let petrolConsumption = steadyStateFuelConsumptionPetrol * distance / 1000 // in L
+                        let dieselConsumption = steadyStateFuelConsumptionDiesel * distance / 1000 // in L
+
+                        petrolConsumption = petrolConsumption * petrolCongestionFactor
+                        dieselConsumption = dieselConsumption * dieselCongestionFactor
+
+                        let petrolCo2 = petrolConsumption * petrolCo2Emission
+                        let diesellCo2 = dieselConsumption * dieselCo2Emission
+
+                        let speedTag = speed.toFixed(1) + ' kmph'
+                        // let petrolCost = '<p>Petrol Cost: ₹ ' + (e.features[0].properties.distance / 1000 * 4.35).toFixed(1) + '</p>'
+                        let petrolCost = (petrolConsumption * petrolPrice).toFixed(1)
+                        let dieselCost = (steadyStateFuelConsumptionDiesel * distance / 1000 * dieselPrice).toFixed(1)
+                        let evCost = (distance * 1.17).toFixed(1)
+                        let transitCost = e.features[0].properties.fare
+
+                        let petrolConsumptionTag = petrolConsumption.toFixed(1) + ' L'
+                        let dieselConsumptionTag = dieselConsumption.toFixed(1) + ' L'
+                        
+                        let petrolCo2Tag = (petrolCo2 / 1000).toFixed(1) + ' kg'
+                        let dieselCo2Tag = (diesellCo2 / 1000).toFixed(1) + ' kg'
+                        let electricCo2Tag = (electricCo2Emission * distance / 1000).toFixed(1) + ' kg'
+
+                        
+
+                        // infoBoxRef.current.innerHTML = '<p> From ' + fromPlace.current + ' to</p>' + '<h2>' + e.features[0].properties.name + '</h2>' + '<h3>' + renderTime(time) + '</h3>' + speedTag + petrolCost + dieselCost + evCost + petrolConsumptionTag + dieselConsumptionTag + petrolCo2Tag + dieselCo2Tag + electricCo2Tag
                     
-                    if(mode.current === 'driving') {
-                        petrolCostRef.current.innerHTML = petrolCost
-                        dieselCostRef.current.innerHTML = dieselCost
-                        evCostRef.current.innerHTML = evCost
-                        petrolConRef.current.innerHTML = petrolConsumptionTag
-                        dieselConRef.current.innerHTML = dieselConsumptionTag
-                        petrolCo2Ref.current.innerHTML = petrolCo2Tag
-                        dieselCo2Ref.current.innerHTML = dieselCo2Tag
-                        evCo2Ref.current.innerHTML = electricCo2Tag
-                    } else if(mode.current === 'transit') {
-                        transitCostRef.current.innerHTML = 'Rs ' + transitCost
+                        fromPlaceRef.current.innerHTML = 'From ' + (fromPlace.current || initWard.bangalore.ward_name) + ' to'
+                        toPlaceRef.current.innerHTML = e.features[0].properties.name
+                        timeRef.current.innerHTML = renderTime(time)
+                        distanceRef.current.innerHTML = distance.toFixed(1) + ' km'
+                        speedTagRef.current.innerHTML = speedTag
+                        
+                        if(mode.current === 'driving') {
+                            petrolCostRef.current.innerHTML = petrolCost
+                            dieselCostRef.current.innerHTML = dieselCost
+                            evCostRef.current.innerHTML = evCost
+                            petrolConRef.current.innerHTML = petrolConsumptionTag
+                            dieselConRef.current.innerHTML = dieselConsumptionTag
+                            petrolCo2Ref.current.innerHTML = petrolCo2Tag
+                            dieselCo2Ref.current.innerHTML = dieselCo2Tag
+                            evCo2Ref.current.innerHTML = electricCo2Tag
+                        } else if(mode.current === 'transit') {
+                            transitCostRef.current.innerHTML = 'Rs ' + transitCost
+                        }
+                        let driving_time = (wardDrivingRef.current[mapClickIdRef.current].destinations[e.features[0].properties.id]?.time || 0)/3600
+                        let driving_distance = (wardDrivingRef.current[mapClickIdRef.current].destinations[e.features[0].properties.id]?.distance || 0)/1000
+                        let driving_speed = driving_distance/driving_time
+                        let speedDrivingTag = driving_speed.toFixed(1) + ' kmph'
+                        speedDrivingRef.current.innerHTML = speedDrivingTag
+                    } else {
+                        comparisonInfoBoxRef.current.style.display = 'block'
+                        let time = e.features[0].properties.time / 3600
+                        let distance = e.features[0].properties.distance / 1000
+                        let d_dist = e.features[0].properties.diff_dist / 1000
+
+                        let d_time = e.features[0].properties.diff_time / 3600
+                        let speed = distance / time
+                        let n_time = d_dist / speed
+                        let speedTag = speed.toFixed(1) + ' kmph'
+                        fromPlaceRef.current.innerHTML = 'From ' + (fromPlace.current || initWard.bangalore.ward_name) + ' to'
+                        toPlaceRef.current.innerHTML = e.features[0].properties.name
+                        distanceRef.current.innerHTML = d_dist.toFixed(1) + ' km'
+                        speedTagRef.current.innerHTML = speedTag
+                        timeRef.current.innerHTML = renderTime(n_time)
+
+                        let transit_time = (wardTransitRef.current[mapClickIdRef.current].destinations[e.features[0].properties.id]?.time || 0)/3600
+                        let transit_distance = (wardTransitRef.current[mapClickIdRef.current].destinations[e.features[0].properties.id]?.distance || 0)/1000
+                        let driving_time = (wardDrivingRef.current[mapClickIdRef.current].destinations[e.features[0].properties.id]?.time || 0)/3600
+                        let driving_distance = (wardDrivingRef.current[mapClickIdRef.current].destinations[e.features[0].properties.id]?.distance || 0)/1000
+                        let transit_speed = transit_distance/transit_time
+                        let driving_speed = driving_distance/driving_time
+                        let speedTransitTag = transit_speed.toFixed(1) + ' kmph'
+                        let speedDrivingTag = driving_speed.toFixed(1) + ' kmph'
+                        speedTransitRef.current.innerHTML = speedTransitTag
+                        speedDrivingRef.current.innerHTML = speedDrivingTag
                     }
+                    
                 })
                      
                 map.on('mouseleave', 'ward_layer', function (e) {
@@ -325,8 +443,31 @@ function TravelTime() {
         })
     }
 
+    function fetchNewBicycleData(id){
+        let completeData = dataRef.current
+        if(!completeData){
+            return
+        }
+        for (let i=0; i<completeData.features.length; i++){
+            let destId = completeData.features[i].properties.id
+            let t = wardDataRef.current[id].destinations[destId]?.time || 0
+            let d = wardDataRef.current[id].destinations[destId]?.distance || 0
+            let dd = wardDataRef.current[id].destinations[destId]?.diff_dist || 0
+            let dt = wardDataRef.current[id].destinations[destId]?.diff_time || 0
+            completeData.features[i].properties.time = t
+            completeData.features[i].properties.distance = d 
+            completeData.features[i].properties.diff_dist = dd
+            completeData.features[i].properties.diff_time = dt
+        }
+        mapRef.current.getSource('ward').setData(completeData)
+    }
+
     useEffect(() => {
-        fetchNewData(mapClickIdRef.current, modeState, statsState)
+        if (modeState !== 'bicycle'){
+            fetchNewData(mapClickIdRef.current, modeState, statsState)
+        } else {
+            fetchNewBicycleData(mapClickIdRef.current)
+        }
     }, [modeState, statsState])
 
     function renderMaxTimeMenu() {
@@ -380,7 +521,7 @@ function TravelTime() {
                 </>
             )
         }
-        else {
+        else if (modeState == 'transit') {
             return (
                 <div className={styles.cost_container}>
                     <div className={styles.cost_item}>
@@ -389,6 +530,8 @@ function TravelTime() {
                     </div>
                 </div>
             )
+        } else {
+            return (<></>)
         }
     }
 
@@ -462,16 +605,17 @@ function TravelTime() {
                     >
                         <MenuItem value={'driving'}>Driving</MenuItem>
                         <MenuItem value={'transit'}>Public Transit</MenuItem>
+                        <MenuItem value={'bicycle'}>Cycling</MenuItem>
                     </Select>
                 </FormControl>
-                <FormControl
+                {modeState!=='bicycle'?<FormControl
                     fullWidth
                     style={{
                         'marginTop': '10px',
                         'marginBottom': '10px'
                     }}
                 >
-                <InputLabel id="select-stats">Stats</InputLabel>
+                    <InputLabel id="select-stats">Stats</InputLabel>
                     <Select
                     labelId="select-stats"
                     id="select-stats-label"
@@ -482,15 +626,15 @@ function TravelTime() {
                         <MenuItem value={'average_travel_time'}>Normal Traffic Conditions</MenuItem>
                         {renderMaxTimeMenu()}
                     </Select>
-                </FormControl>
-                <p className={styles.detail_info}>This visualisation gives an overview of travel time within different wards of Bangalore by driving and public transit.</p>
-                <p className={styles.detail_info}>It shows you various time and distance dependant indicators like average speed of the trip, fuel consumption, fuel price for a trip and carbon emissions under normal and peak traffic conditions.</p>
+                </FormControl>:""}
+                <p className={styles.detail_info}>This visualisation gives an overview of travel time within different wards of Bangalore by driving, cycling and public transit.</p>
+                <p className={styles.detail_info}>{modeState!=='bicycle'?'It shows you various time and distance dependant indicators like average speed of the trip, fuel consumption, fuel price for a trip and carbon emissions under normal and peak traffic conditions.':"It shows you various time and distance dependant indicators like average speed of the trip"}</p>
                 <p className={styles.detail_info}>Time and distance is computed from one centroid point of a ward to another.</p>
-                <p className={styles.detail_info}>Fuel consumption is computed based on a study documented in <a href="http://ijtte.com/uploads/2015-12-22/935be804-3a4a-3e79IJTTE_Vol%205(4)_10.pdf" target="_blank" rel="noreferrer">this paper</a></p>
+                {modeState!=='bicycle'?<p className={styles.detail_info}>Fuel consumption is computed based on a study documented in <a href="http://ijtte.com/uploads/2015-12-22/935be804-3a4a-3e79IJTTE_Vol%205(4)_10.pdf" target="_blank" rel="noreferrer">this paper</a></p>:""}
             </div>
             <div
-            ref={infoBoxRef}
-            className={styles.info_box}>
+                ref={infoBoxRef}
+                className={styles.info_box}>
                 <div className={styles.imp_info_container}>
                     <p ref={fromPlaceRef}></p>
                     <h2 ref={toPlaceRef}></h2>
@@ -509,6 +653,39 @@ function TravelTime() {
                     </div>
                     {renderDrivingStats()}
                 </div>
+            </div>
+            
+            <div ref={comparisonInfoBoxRef} className={styles.comparison_info_box}>
+                <div className={styles.imp_info_container}>
+                    <h3>Comparisons</h3>
+                </div>
+                {modeState==='bicycle'?<div className={styles.stats_box}>
+                    <div className = {styles.speed_tag_container}>
+                        <div>
+                            <img src="/img/car.png" alt="" />
+                        </div>
+                        <div>
+                            <h3 ref={speedDrivingRef}></h3>
+                        </div>
+                    </div>
+                    <div className = {styles.speed_tag_container}>
+                        <div>
+                            <img src="/img/bus.png" alt="" />
+                        </div>
+                        <div>
+                            <h3 ref={speedTransitRef}></h3>
+                        </div>
+                    </div>
+                </div>:modeState==='driving'?"":<div className={styles.stats_box}>
+                    <div className = {styles.speed_tag_container}>
+                        <div>
+                            <img src="/img/car.png" alt="" />
+                        </div>
+                        <div>
+                            <h3 ref={speedDrivingRef}></h3>
+                        </div>
+                    </div>
+                </div>}
             </div>
             <div className={styles.legend}>
                 {renderLegend()}
