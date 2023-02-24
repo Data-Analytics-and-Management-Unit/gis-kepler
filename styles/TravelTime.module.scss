@@ -65,7 +65,30 @@
         }
     }
 }
-
+.ward_info_box{
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    padding: 10px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    font-size: 0.6rem;
+    h2{
+        margin: 0;
+    }
+}
+.ward_destination_info_box{
+    position: absolute;
+    top: 140px;
+    right: 20px;
+    padding: 10px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    font-size: 0.6rem;
+    h2{
+        margin: 0;
+    }
+}
 .comparison_info_box {
     position: absolute;
     display: none;
@@ -188,4 +211,39 @@
 
         }
     }
+}
+
+.modal{
+    font-size: 12px;
+    .header {
+        width: 100%;
+        border-bottom: 1px solid gray;
+        font-size: 18px;
+        text-align: center;
+        padding: 5px;
+    }
+    .content {
+        width: 100%;
+        padding: 10px 5px;
+    }
+    .close {
+        cursor: pointer;
+        position: absolute;
+        display: block;
+        padding: 2px 5px;
+        line-height: 20px;
+        right: -10px;
+        top: -10px;
+        font-size: 24px;
+        background: #ffffff;
+        border-radius: 18px;
+        border: 1px solid #cfcece;
+    } 
+}
+
+.button {
+    border: none; // remove borders
+    cursor: pointer;
+    text-decoration: underline; // remove default text decoration
+    background-color: transparent;
 }
