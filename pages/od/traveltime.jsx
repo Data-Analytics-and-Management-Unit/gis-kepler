@@ -500,7 +500,7 @@ function TravelTime() {
                 speedTag = speed.toFixed(1) + ' kmph'
                 // let petrolCost = '<p>Petrol Cost: ₹ ' + (e.features[0].properties.distance / 1000 * 4.35).toFixed(1) + '</p>'
                 
-                transitCost = wardTransitRef.current[wardState].destinations[wardStateDestination].fare
+                transitCost = wardTransitRef.current[wardState].destinations[wardStateDestination]?.fare
 
                 // infoBoxRef.current.innerHTML = '<p> From ' + fromPlace.current + ' to</p>' + '<h2>' + e.features[0].properties.name + '</h2>' + '<h3>' + renderTime(time) + '</h3>' + speedTag + petrolCost + dieselCost + evCost + petrolConsumptionTag + dieselConsumptionTag + petrolCo2Tag + dieselCo2Tag + electricCo2Tag
             
