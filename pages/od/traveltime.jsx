@@ -638,65 +638,6 @@ function TravelTime() {
             <div className={styles.iuo_title}>
                 India Urban Observatory
             </div>
-            <div className={styles.ward_info_box}>
-                <h2>Origin Ward</h2>
-                <FormControl 
-                    fullWidth
-                    style={{
-                        'marginTop': '10px',
-                        'marginBottom': '10px'
-                    }}
-                >
-                    <Select
-                        id="select-ward-origin-label"
-                        value={wardState}
-                        onChange={handleWardChange}
-                        style={{width:"15rem"}}
-                        inputProps={{ 'aria-label': 'Without label' }}
-                        >
-                            {Object.entries(wardNames).map(([key, value])=>
-                                {
-                                    if (modeState === 'bicycle'){
-                                        if (wardsWithoutRoutes.includes(key)===false){
-                                            return <MenuItem key={key} value={key}>{value}</MenuItem>
-                                        }
-                                    }else {
-                                        return <MenuItem key={key} value={key}>{value}</MenuItem>
-                                    }                                
-                            })}
-                    </Select>
-                </FormControl>
-            </div>
-            <div className={styles.ward_destination_info_box}>
-                <h2>Destination Ward</h2>
-                <FormControl 
-                    fullWidth
-                    style={{
-                        'marginTop': '10px',
-                        'marginBottom': '10px'
-                    }}
-                >
-                    <Select
-                        id="select-ward-destination-label"
-                        value={wardStateDestination}
-                        onChange={handleWardDestinationChange}
-                        style={{width:"15rem"}}
-                        displayEmpty
-                        inputProps={{ 'aria-label': 'Without label' }}
-                        >
-                            {Object.entries(wardNames).map(([key, value])=>
-                                {
-                                    if (modeState === 'bicycle'){
-                                        if (wardsWithoutRoutes.includes(key)===false){
-                                            return <MenuItem key={key} value={key}>{value}</MenuItem>
-                                        }
-                                    }else {
-                                        return <MenuItem key={key} value={key}>{value}</MenuItem>
-                                    }                                
-                            })}
-                    </Select>
-                </FormControl>
-            </div>
             <div className={styles.controller_container}>
                 <h1 className={styles.heading}>Impact of transport modes and traffic on travel time, fuel consumption, cost and carbon emissions</h1>
                 <FormControl 
@@ -736,17 +677,16 @@ function TravelTime() {
                     >
                         <MenuItem value={'driving'}>Driving</MenuItem>
                         <MenuItem value={'transit'}>Public Transit</MenuItem>
-                        <MenuItem value={'bicycle'}>Cycling</MenuItem>
                     </Select>
                 </FormControl>
-                {modeState!=='bicycle'?<FormControl
+                <FormControl
                     fullWidth
                     style={{
                         'marginTop': '10px',
                         'marginBottom': '10px'
                     }}
                 >
-                    <InputLabel id="select-stats">Stats</InputLabel>
+                <InputLabel id="select-stats">Stats</InputLabel>
                     <Select
                     labelId="select-stats"
                     id="select-stats-label"
@@ -757,12 +697,11 @@ function TravelTime() {
                         <MenuItem value={'average_travel_time'}>Normal Traffic Conditions</MenuItem>
                         {renderMaxTimeMenu()}
                     </Select>
-                </FormControl>:""}
-                <p className={styles.detail_info}>This visualisation gives an overview of travel time within different wards of Bangalore by driving, cycling and public transit.</p>
-                <p className={styles.detail_info}>{modeState!=='bicycle'?'It shows you various time and distance dependant indicators like average speed of the trip, fuel consumption, fuel price for a trip and carbon emissions under normal and peak traffic conditions.':"It shows you various time and distance dependant indicators like average speed of the trip"}</p>
+                </FormControl>
+                <p className={styles.detail_info}>This visualisation gives an overview of travel time within different wards of Bangalore by driving and public transit.</p>
+                <p className={styles.detail_info}>It shows you various time and distance dependant indicators like average speed of the trip, fuel consumption, fuel price for a trip and carbon emissions under normal and peak traffic conditions.</p>
                 <p className={styles.detail_info}>Time and distance is computed from one centroid point of a ward to another.</p>
-                {modeState!=='bicycle'?<p className={styles.detail_info}>Fuel consumption is computed based on a study documented in <a href="http://ijtte.com/uploads/2015-12-22/935be804-3a4a-3e79IJTTE_Vol%205(4)_10.pdf" target="_blank" rel="noreferrer">this paper</a></p>:""}
-                <p className={styles.detail_info}>Data on cycle rides in Bangalore taken from <a href="https://data.opencity.in/dataset/bengaluru-cycle-rides-data" target="_blank" rel="noreferrer">here</a></p>
+                <p className={styles.detail_info}>Fuel consumption is computed based on a study documented in <a href="http://ijtte.com/uploads/2015-12-22/935be804-3a4a-3e79IJTTE_Vol%205(4)_10.pdf" target="_blank" rel="noreferrer">this paper</a></p>
             </div>
             <div
             ref={infoBoxRef}
@@ -785,86 +724,6 @@ function TravelTime() {
                     </div>
                     {renderDrivingStats()}
                 </div>
-            </div>
-            <div ref={comparisonInfoBoxRef} className={styles.comparison_info_box}>
-                <div className={styles.imp_info_container}>
-                    <h3>Comparisons</h3>
-                </div>
-                {modeState==='bicycle'?<div className={styles.stats_box}>
-                    <div className = {styles.speed_tag_container}>
-                        <div>
-                            <img src="/img/car.png" alt="" />
-                        </div>
-                        <div>
-                            <p>At normal traffic</p>
-                            <h3 ref={speedDrivingRef}></h3>
-                        </div>
-                        <div>
-                            <p>At peak traffic</p>
-                            <h3 ref={speedMaxDrivingRef}></h3>
-                        </div>
-                    </div>
-                    <div className = {styles.speed_tag_container}>
-                        <div>
-                            <img src="/img/bus.png" alt="" />
-                        </div>
-                        <div>
-                            <h3 ref={speedTransitRef}></h3>
-                        </div>
-                    </div>
-                    <br></br>
-                    <Popup
-                        trigger={<button className={styles.button}> Click here to see graph </button>}
-                        modal
-                        contentStyle={{ background: '#fff' }}
-                        overlayStyle={{ background: 'rgba(0,0,0,0.5)' }}
-                        nested
-                    >
-                        {close => (
-                            <div className={styles.modal}>
-                                <button className={styles.close} onClick={close}>
-                                &times;
-                                </button>
-                                <div className={styles.content}>
-                                    <LineChart driving={drivingChartData} transit={transitChartData} bicycle={cyclingChartData}/>
-                                </div>
-                            </div>
-                        )}
-                    </Popup>
-                </div>:modeState==='driving'?"":<div className={styles.stats_box}>
-                    <div className = {styles.speed_tag_container}>
-                        <div>
-                            <img src="/img/car.png" alt="" />
-                        </div>
-                        <div>
-                            <p>At normal traffic</p>
-                            <h3 ref={speedDrivingRef}></h3>
-                        </div>
-                        <div>
-                            <p>At peak traffic</p>
-                            <h3 ref={speedMaxDrivingRef}></h3>
-                        </div>
-                    </div>
-                    <br></br>
-                    <Popup
-                        trigger={<button className={styles.button}> Click here to see graph </button>}
-                        modal
-                        contentStyle={{ background: '#fff' }}
-                        overlayStyle={{ background: 'rgba(0,0,0,0.5)' }}
-                        nested
-                    >
-                        {close => (
-                            <div className={styles.modal}>
-                                <button className={styles.close} onClick={close}>
-                                &times;
-                                </button>
-                                <div className={styles.content}>
-                                    <LineChart driving={drivingChartData} transit={transitChartData} bicycle={cyclingChartData}/>
-                                </div>
-                            </div>
-                        )}
-                    </Popup>
-                </div>}
             </div>
             <div className={styles.legend}>
                 {renderLegend()}
