@@ -773,6 +773,86 @@ function TravelTime() {
                     {renderDrivingStats()}
                 </div>
             </div>
+            <div ref={comparisonInfoBoxRef} className={styles.comparison_info_box}>
+                <div className={styles.imp_info_container}>
+                    <h3>Comparisons</h3>
+                </div>
+                {modeState==='bicycle'?<div className={styles.stats_box}>
+                    <div className = {styles.speed_tag_container}>
+                        <div>
+                            <img src="/img/car.png" alt="" />
+                        </div>
+                        <div>
+                            <p>At normal traffic</p>
+                            <h3 ref={speedDrivingRef}></h3>
+                        </div>
+                        <div>
+                            <p>At peak traffic</p>
+                            <h3 ref={speedMaxDrivingRef}></h3>
+                        </div>
+                    </div>
+                    <div className = {styles.speed_tag_container}>
+                        <div>
+                            <img src="/img/bus.png" alt="" />
+                        </div>
+                        <div>
+                            <h3 ref={speedTransitRef}></h3>
+                        </div>
+                    </div>
+                    <br></br>
+                    <Popup
+                        trigger={<button className={styles.button}> Click here to see graph </button>}
+                        modal
+                        contentStyle={{ background: '#fff' }}
+                        overlayStyle={{ background: 'rgba(0,0,0,0.5)' }}
+                        nested
+                    >
+                        {close => (
+                            <div className={styles.modal}>
+                                <button className={styles.close} onClick={close}>
+                                &times;
+                                </button>
+                                <div className={styles.content}>
+                                    <LineChart driving={drivingChartData} transit={transitChartData} bicycle={cyclingChartData}/>
+                                </div>
+                            </div>
+                        )}
+                    </Popup>
+                </div>:modeState==='driving'?"":<div className={styles.stats_box}>
+                    <div className = {styles.speed_tag_container}>
+                        <div>
+                            <img src="/img/car.png" alt="" />
+                        </div>
+                        <div>
+                            <p>At normal traffic</p>
+                            <h3 ref={speedDrivingRef}></h3>
+                        </div>
+                        <div>
+                            <p>At peak traffic</p>
+                            <h3 ref={speedMaxDrivingRef}></h3>
+                        </div>
+                    </div>
+                    <br></br>
+                    <Popup
+                        trigger={<button className={styles.button}> Click here to see graph </button>}
+                        modal
+                        contentStyle={{ background: '#fff' }}
+                        overlayStyle={{ background: 'rgba(0,0,0,0.5)' }}
+                        nested
+                    >
+                        {close => (
+                            <div className={styles.modal}>
+                                <button className={styles.close} onClick={close}>
+                                &times;
+                                </button>
+                                <div className={styles.content}>
+                                    <LineChart driving={drivingChartData} transit={transitChartData} bicycle={cyclingChartData}/>
+                                </div>
+                            </div>
+                        )}
+                    </Popup>
+                </div>}
+            </div>
             <div className={styles.legend}>
                 {renderLegend()}
             </div>
