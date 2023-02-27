@@ -162,6 +162,9 @@ function TravelTime() {
                         layout: {},
                         paint: {
                             'fill-color': [
+                                'case',
+                                ['==', ['get', 'noroutes'], true], '#696969',
+                                [
                                 'interpolate', ['linear'],
                                 ['number', ['get', 'time']],
 
@@ -226,6 +229,7 @@ function TravelTime() {
                                 // 3500,"#df979e",
                                 // 4000,"#d7658b",
                                 // 5000,"#c80064"
+                                ]
                             ],
                             'fill-opacity': 0.8,
                             'fill-outline-color': '#6E91BE'
