@@ -468,12 +468,35 @@ function TravelTime() {
                 let t = partialData.destinations[destId]?.time || 0
                 let d = partialData.destinations[destId]?.distance || 0
                 let f = partialData.destinations[destId]?.fare || 0
+                let c = false
                 completeData.features[i].properties.time = t
                 completeData.features[i].properties.distance = d
                 completeData.features[i].properties.fare = f
+                completeData.features[i].properties.noroutes = c
             }
             mapRef.current.getSource('ward').setData(completeData);
         })
+    }
+
+    function fetchNewBicycleData(id){
+        let completeData = dataRef.current
+        if(!completeData){
+            return
+        }
+        for (let i=0; i<completeData.features.length; i++){
+            let destId = completeData.features[i].properties.id
+            let t = wardDataRef.current[id].destinations[destId]?.time || 0
+            let d = wardDataRef.current[id].destinations[destId]?.distance || 0
+            let dd = wardDataRef.current[id].destinations[destId]?.diff_dist || 0
+            let dt = wardDataRef.current[id].destinations[destId]?.diff_time || 0
+            let c = wardsWithoutRoutes.includes(destId.toString())
+            completeData.features[i].properties.time = t
+            completeData.features[i].properties.distance = d 
+            completeData.features[i].properties.diff_dist = dd
+            completeData.features[i].properties.diff_time = dt
+            completeData.features[i].properties.noroutes = c
+        }
+        mapRef.current.getSource('ward').setData(completeData)
     }
 
     useEffect(() => {
