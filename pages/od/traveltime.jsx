@@ -500,8 +500,35 @@ function TravelTime() {
     }
 
     useEffect(() => {
-        fetchNewData(mapClickIdRef.current, modeState, statsState)
+        if (modeState !== 'bicycle'){
+            fetchNewData(mapClickIdRef.current, modeState, statsState)
+            
+        } else {
+            fetchNewBicycleData(mapClickIdRef.current)
+        }
     }, [modeState, statsState])
+
+    useEffect(()=>{
+        if (modeState !== 'bicycle'){
+            fetchNewData(wardState, modeState, statsState)
+        } else {
+            fetchNewBicycleData(wardState)
+        }
+        if (wardDataRef.current!==undefined && wardDrivingRef.current!==undefined && wardDrivingMaxRef.current!==undefined && wardTransitRef!==undefined && wardStateDestination!==""){
+            handleInfoBoxInfo()
+        }
+    }, [wardState])
+
+    useEffect(()=>{
+        if (wardDataRef.current!==undefined && wardDrivingRef.current!==undefined && wardDrivingMaxRef.current!==undefined && wardTransitRef!==undefined && wardStateDestination!==""){
+            infoBoxRef.current.style.display = 'block'
+            handleInfoBoxInfo()
+            if (mode.current!=='driving'){
+                comparisonInfoBoxRef.current.style.display = 'block'
+            }
+        }
+
+    })
 
     function renderMaxTimeMenu() {
         if(modeState == 'driving') {
