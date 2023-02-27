@@ -11,6 +11,10 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 
 import styles from '../../styles/TravelTime.module.scss';
 
+import Popup from 'reactjs-popup';
+
+import LineChart from '../../components/Charts/LineChart';
+
 function TravelTime() {
 
     const mapClickIdRef = useRef();
@@ -391,13 +395,6 @@ function TravelTime() {
         dieselConsumptionTag, petrolCo2Tag, dieselCo2Tag, electricCo2Tag,
         d_dist, n_time
         if(mode.current === 'driving'){
-            dieselPrice = 95 // Rs / L
-            petrolPrice = 110 // Rs / L
-
-            petrolCo2Emission = 2347.69813574 // grams CO2 / L
-            dieselCo2Emission = 2689.27276041 // grams CO2 / L
-            electricCo2Emission = 57.6699029126 // grams CO2 / km
-
             if(statsState==='average_travel_time'){
                 time = (wardDrivingRef.current[wardState].destinations[wardStateDestination]?.time||0) / 3600
                 distance = (wardDrivingRef.current[wardState].destinations[wardStateDestination]?.distance||0) / 1000
