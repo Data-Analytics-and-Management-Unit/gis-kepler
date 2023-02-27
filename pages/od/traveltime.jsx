@@ -1,6 +1,8 @@
 import * as maplibre from 'maplibre-gl/dist/maplibre-gl';
 import { useState } from 'react';
 import { useEffect, useRef } from 'react';
+import { wardsWithoutRoutes } from '../../public/data/generic_layers/wards_without_routes.js';
+import wardNames from '../../public/data/generic_layers/ward_names.json';
 
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
