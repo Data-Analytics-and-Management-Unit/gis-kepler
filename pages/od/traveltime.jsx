@@ -33,11 +33,27 @@ function TravelTime() {
     const evCo2Ref = useRef();
     const evCostRef = useRef();
     const transitCostRef = useRef();
+    const wardDataRef = useRef();
+    const wardDrivingRef = useRef();
+    const wardDrivingMaxRef = useRef();
+    const wardTransitRef = useRef();
+    const speedTransitRef = useRef();
+    const speedDrivingRef = useRef();
+    const speedMaxDrivingRef = useRef();
+    const comparisonInfoBoxRef = useRef();
 
     
 
     const [modeState, setModeState] = useState('driving');
     const [statsState, setStatsState] = useState('average_travel_time');
+    const [wardState, setWardState] = useState('77')
+    const [wardStateDestination, setWardStateDestination] = useState("")
+    const [tempCyclingChartData, setTempCyclingChartData] = useState([])
+    const [tempDrivingChartData, setTempDrivingChartData] = useState([])
+    const [tempTransitChartData, setTempTransitChartData] = useState([])
+    const [cyclingChartData, setCyclingChartData] = useState([])
+    const [drivingChartData, setDrivingChartData] = useState([])
+    const [transitChartData, setTransitChartData] = useState([])
 
     const mode = useRef(modeState);
     const stats = useRef(statsState);
@@ -70,6 +86,30 @@ function TravelTime() {
             return (min / 60).toFixed(0) + ' hrs ' + (min % 60) + ' mins'
         }
     }
+
+    useEffect(()=>{
+        if (wardDataRef.current!==undefined && wardDrivingRef!==undefined && wardTransitRef!==undefined){
+            let d = []
+            let c = []
+            let t = []
+            for (let i=1; i<199; i++){
+                c.push(((wardDataRef.current[wardState].destinations[i.toString()]?.distance/1000)/(wardDataRef.current[wardState].destinations[i.toString()]?.time/3600)).toFixed(1))
+                d.push(((wardDrivingRef.current[wardState].destinations[i.toString()]?.distance/1000)/(wardDrivingRef.current[wardState].destinations[i.toString()]?.time/3600)).toFixed(1))
+                t.push(((wardTransitRef.current[wardState].destinations[i.toString()]?.distance/1000)/(wardTransitRef.current[wardState].destinations[i.toString()]?.time/3600)).toFixed(1))
+            }
+            setTempDrivingChartData(d)
+            setTempCyclingChartData(c)
+            setTempTransitChartData(t)
+        }
+    }, [wardDataRef.current, wardDrivingRef.current, wardTransitRef.current, wardState])
+
+    useEffect(()=>{
+        if(tempDrivingChartData.length === 198 && tempCyclingChartData.length === 198 && tempTransitChartData.length === 198){
+            setCyclingChartData(tempCyclingChartData)
+            setDrivingChartData(tempDrivingChartData)
+            setTransitChartData(tempTransitChartData)
+        }
+    }, [tempCyclingChartData, tempDrivingChartData, tempTransitChartData])
 
     function handleModeChange(e) {
         console.log('change mode')
