@@ -11,6 +11,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 
 import styles from '../../styles/TravelTime.module.scss';
 
+import 
+
 function TravelTime() {
 
     const mapClickIdRef = useRef();
@@ -624,6 +626,65 @@ function TravelTime() {
             <div ref={mapContainerRef} className="map_container"></div>
             <div className={styles.iuo_title}>
                 India Urban Observatory
+            </div>
+            <div className={styles.ward_info_box}>
+                <h2>Origin Ward</h2>
+                <FormControl 
+                    fullWidth
+                    style={{
+                        'marginTop': '10px',
+                        'marginBottom': '10px'
+                    }}
+                >
+                    <Select
+                        id="select-ward-origin-label"
+                        value={wardState}
+                        onChange={handleWardChange}
+                        style={{width:"15rem"}}
+                        inputProps={{ 'aria-label': 'Without label' }}
+                        >
+                            {Object.entries(wardNames).map(([key, value])=>
+                                {
+                                    if (modeState === 'bicycle'){
+                                        if (wardsWithoutRoutes.includes(key)===false){
+                                            return <MenuItem key={key} value={key}>{value}</MenuItem>
+                                        }
+                                    }else {
+                                        return <MenuItem key={key} value={key}>{value}</MenuItem>
+                                    }                                
+                            })}
+                    </Select>
+                </FormControl>
+            </div>
+            <div className={styles.ward_destination_info_box}>
+                <h2>Destination Ward</h2>
+                <FormControl 
+                    fullWidth
+                    style={{
+                        'marginTop': '10px',
+                        'marginBottom': '10px'
+                    }}
+                >
+                    <Select
+                        id="select-ward-destination-label"
+                        value={wardStateDestination}
+                        onChange={handleWardDestinationChange}
+                        style={{width:"15rem"}}
+                        displayEmpty
+                        inputProps={{ 'aria-label': 'Without label' }}
+                        >
+                            {Object.entries(wardNames).map(([key, value])=>
+                                {
+                                    if (modeState === 'bicycle'){
+                                        if (wardsWithoutRoutes.includes(key)===false){
+                                            return <MenuItem key={key} value={key}>{value}</MenuItem>
+                                        }
+                                    }else {
+                                        return <MenuItem key={key} value={key}>{value}</MenuItem>
+                                    }                                
+                            })}
+                    </Select>
+                </FormControl>
             </div>
             <div className={styles.controller_container}>
                 <h1 className={styles.heading}>Impact of transport modes and traffic on travel time, fuel consumption, cost and carbon emissions</h1>
