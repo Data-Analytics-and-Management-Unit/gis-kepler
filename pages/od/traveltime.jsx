@@ -238,10 +238,20 @@ function TravelTime() {
                 })
         
                 map.on('click', 'ward_layer', e => {
-                    let id = e.features[0].properties.id
-                    mapClickIdRef.current = id
-
-                    fromPlace.current = e.features[0].properties.name
+                    if (mode.current==='bicycle'){
+                        if (wardsWithoutRoutes.includes(e.features[0].properties.id)===false){
+                            let id = e.features[0].properties.id
+                            mapClickIdRef.current = id
+                            setWardState(e.features[0].properties.id)
+                            fromPlace.current = e.features[0].properties.name
+                        }
+                    }else{
+                        let id = e.features[0].properties.id
+                        mapClickIdRef.current = id
+                        setWardState(e.features[0].properties.id)
+                        fromPlace.current = e.features[0].properties.name
+                    }
+                    
 
                     // fetch(apiEndpointPartialdata + '?id=' + id + '&mode=' + mode + '&stats=' + stats)
                     //     .then(res => res.json())
@@ -256,8 +266,6 @@ function TravelTime() {
                     //         }
                     //         map.getSource('ward').setData(completeData);
                     //     })
-
-                    fetchNewData(id, mode.current, stats.current)
                 });
         
                 map.on('mouseenter', 'ward_layer', function (e) {
