@@ -527,8 +527,7 @@ function TravelTime() {
                 comparisonInfoBoxRef.current.style.display = 'block'
             }
         }
-
-    })
+    }, [wardStateDestination])
 
     function renderMaxTimeMenu() {
         if(modeState == 'driving') {
@@ -581,7 +580,7 @@ function TravelTime() {
                 </>
             )
         }
-        else {
+        else if (modeState == 'transit'){
             return (
                 <div className={styles.cost_container}>
                     <div className={styles.cost_item}>
@@ -590,6 +589,8 @@ function TravelTime() {
                     </div>
                 </div>
             )
+        } else {
+            return (<></>)
         }
     }
 
