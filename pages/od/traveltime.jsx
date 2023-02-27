@@ -540,6 +540,8 @@ function TravelTime() {
         }
     }, [wardStateDestination])
 
+
+
     function renderMaxTimeMenu() {
         if(modeState == 'driving') {
             return <MenuItem value={'max_travel_time'}>Peak Traffic Conditions</MenuItem>
@@ -591,7 +593,7 @@ function TravelTime() {
                 </>
             )
         }
-        else {
+        else if (modeState == 'transit'){
             return (
                 <div className={styles.cost_container}>
                     <div className={styles.cost_item}>
@@ -600,6 +602,8 @@ function TravelTime() {
                     </div>
                 </div>
             )
+        } else {
+            return (<></>)
         }
     }
 
