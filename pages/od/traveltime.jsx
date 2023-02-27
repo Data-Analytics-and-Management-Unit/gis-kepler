@@ -11,7 +11,12 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 
 import styles from '../../styles/TravelTime.module.scss';
 
-import 
+import Popup from 'reactjs-popup';
+
+import LineChart from '../../components/Charts/LineChart';
+
+import { wardsWithoutRoutes } from '../../public/data/generic_layers/wards_without_routes';
+import wardNames from '../../public/data/generic_layers/ward_names.json'
 
 function TravelTime() {
 
