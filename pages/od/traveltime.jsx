@@ -116,7 +116,8 @@ function TravelTime() {
         mode.current = e.target.value
         setModeState(e.target.value)
         infoBoxRef.current.style.display = 'none'
-
+        comparisonInfoBoxRef.current.style.display = 'none'
+        setWardStateDestination("")
         if(e.target.value == 'transit') {
             stats.current = 'average_travel_time'
             setStatsState('average_travel_time')
@@ -127,7 +128,20 @@ function TravelTime() {
         console.log('change stats')
         stats.current = e.target.value
         setStatsState(e.target.value)
+        setWardStateDestination("")
         infoBoxRef.current.style.display = 'none'
+        comparisonInfoBoxRef.current.style.display = 'none'
+    }
+
+    function handleWardChange(e) {
+        setWardState(e.target.value)
+        fromPlace.current = wardNames[e.target.value]
+        fromPlaceRef.current.innerHTML = 'From ' + (fromPlace.current) + ' to'
+    }
+
+    function handleWardDestinationChange(e){
+        setWardStateDestination(e.target.value)
+        toPlaceRef.current.innerHTML = wardNames[e.target.value]
     }
 
     useEffect(() => {
