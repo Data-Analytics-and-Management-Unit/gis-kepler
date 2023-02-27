@@ -155,9 +155,23 @@ function TravelTime() {
 
         mapClickIdRef.current = initWard.bangalore.ward_no
         let dataPromise = fetch(apiEndpointFulldata + '?id=' + initWard.bangalore.ward_no + '&mode=' + mode.current + '&stats=' + stats.current)
-
+        let wardDrivingPromise = fetch('/data/driving_data/ward_wise_data_driving.json')
+        let wardTransitPromise = fetch('/data/transit_data/ward_wise_data_transit.json')
+        let wardPromise = fetch('/data/cycle_data/ward_wise_data.json')
+        let wardDrivingMaxPromise = fetch('/data/driving_data/ward_wise_data_driving_max.json')
         map.on('load', () => {
-
+            wardPromise.then(res => res.json()).then(wardData=>{
+                wardDataRef.current = wardData
+            })
+            wardDrivingPromise.then(res=>res.json()).then(wardDrivingData=>{
+                wardDrivingRef.current = wardDrivingData
+            })
+            wardTransitPromise.then(res=>res.json()).then(wardTransitData=>{
+                wardTransitRef.current = wardTransitData
+            })
+            wardDrivingMaxPromise.then(res=>res.json()).then(wardDrivingMaxData=>{
+                wardDrivingMaxRef.current = wardDrivingMaxData
+            })
             dataPromise
                 .then(res => res.json())
                 .then(completeData => {
