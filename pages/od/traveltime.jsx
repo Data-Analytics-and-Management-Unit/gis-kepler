@@ -84,6 +84,10 @@ function TravelTime() {
         }
     }
 
+    const sortedMenuItems = Object.entries(wardNames)
+    .sort(([, value1], [, value2]) => value1.localeCompare(value2))
+    .map(([key, value]) => ({ key, value }));
+
     function renderTime(timeHour) {
 
         let timeSec = timeHour * 3600
@@ -655,7 +659,7 @@ function TravelTime() {
                         style={{width:"15rem"}}
                         inputProps={{ 'aria-label': 'Without label' }}
                         >
-                            {Object.entries(wardNames).map(([key, value])=>
+                            {sortedMenuItems.map(({key, value})=>
                                 {
                                     if (modeState === 'bicycle'){
                                         if (wardsWithoutRoutes.includes(key)===false){
