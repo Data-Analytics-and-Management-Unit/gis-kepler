@@ -18,6 +18,13 @@ import LineChart from '../../components/Charts/LineChart';
 import { wardsWithoutRoutes } from '../../public/data/generic_layers/wards_without_routes';
 import wardNames from '../../public/data/generic_layers/ward_names.json'
 
+import dynamic from 'next/dynamic'
+
+const StackedBarChart = dynamic(
+    ()=>import("../../components/Charts/StackedBarChart"),
+    {ssr: false}
+)
+
 function TravelTime() {
 
     const mapClickIdRef = useRef();
@@ -818,7 +825,8 @@ function TravelTime() {
                                 &times;
                                 </button>
                                 <div className={styles.content}>
-                                    <LineChart driving={drivingChartData} transit={transitChartData} bicycle={cyclingChartData}/>
+                                    {/*<LineChart driving={drivingChartData} transit={transitChartData} bicycle={cyclingChartData}/>*/}
+                                    <StackedBarChart driving={drivingChartData} transit={transitChartData} bicycle={cyclingChartData}/>
                                 </div>
                             </div>
                         )}
@@ -851,7 +859,8 @@ function TravelTime() {
                                 &times;
                                 </button>
                                 <div className={styles.content}>
-                                    <LineChart driving={drivingChartData} transit={transitChartData} bicycle={cyclingChartData}/>
+                                    {/*<LineChart driving={drivingChartData} transit={transitChartData} bicycle={cyclingChartData}/>*/}
+                                    <StackedBarChart driving={drivingChartData} transit={transitChartData} bicycle={cyclingChartData}/>
                                 </div>
                             </div>
                         )}
