@@ -1,4 +1,5 @@
 import * as maplibre from 'maplibre-gl/dist/maplibre-gl';
+import 'maplibre-gl/dist/maplibre-gl.css'
 import { useState } from 'react';
 import { useEffect, useRef } from 'react';
 
@@ -17,6 +18,7 @@ import LineChart from '../../components/charts/LineChart';
 
 import { wardsWithoutRoutes } from '../../public/data/generic_layers/wards_without_routes';
 import wardNames from '../../public/data/generic_layers/ward_names.json'
+import wardCoords from '../../public/data/generic_layers/ward_coords.json'
 
 import dynamic from 'next/dynamic'
 
@@ -55,7 +57,8 @@ function TravelTime() {
     const speedDrivingRef = useRef();
     const speedMaxDrivingRef = useRef();
     const comparisonInfoBoxRef = useRef();
-
+    const markerSource = useRef();
+    const markerDest = useRef();
     
 
     const [modeState, setModeState] = useState('driving');
@@ -83,6 +86,10 @@ function TravelTime() {
             ward_no: 77
         }
     }
+
+    const sortedMenuItems = Object.entries(wardNames)
+    .sort(([, value1], [, value2]) => value1.localeCompare(value2))
+    .map(([key, value]) => ({ key, value }));
 
     function renderTime(timeHour) {
 
@@ -174,6 +181,7 @@ function TravelTime() {
         let wardPromise = fetch('/data/cycle_data/ward_wise_data.json')
         let wardDrivingMaxPromise = fetch('/data/driving_data/ward_wise_data_driving_max.json')
         map.on('load', () => {
+            markerSource.current = new maplibre.Marker({ color: 'green'}).setLngLat([wardCoords[wardNames[wardState]]['Longitude'], wardCoords[wardNames[wardState]]['Latitude']]).addTo(map)
             wardPromise.then(res => res.json()).then(wardData=>{
                 wardDataRef.current = wardData
             })
@@ -530,6 +538,7 @@ function TravelTime() {
         }
         if (wardDataRef.current!==undefined && wardDrivingRef.current!==undefined && wardDrivingMaxRef.current!==undefined && wardTransitRef!==undefined && wardStateDestination!==""){
             handleInfoBoxInfo()
+            markerSource.current.setLngLat([wardCoords[wardNames[wardState]]['Longitude'], wardCoords[wardNames[wardState]]['Latitude']])
         }
     }, [wardState])
 
@@ -539,6 +548,11 @@ function TravelTime() {
             handleInfoBoxInfo()
             if (mode.current!=='driving'){
                 comparisonInfoBoxRef.current.style.display = 'block'
+            }
+            if(markerDest.current === undefined){
+                markerDest.current = new maplibre.Marker({ color: 'red'}).setLngLat([wardCoords[wardNames[wardStateDestination]]['Longitude'], wardCoords[wardNames[wardStateDestination]]['Latitude']]).addTo(mapRef.current)
+            } else {
+                markerDest.current.setLngLat([wardCoords[wardNames[wardStateDestination]]['Longitude'], wardCoords[wardNames[wardStateDestination]]['Latitude']])
             }
         }
     }, [wardStateDestination])
@@ -655,7 +669,7 @@ function TravelTime() {
                         style={{width:"15rem"}}
                         inputProps={{ 'aria-label': 'Without label' }}
                         >
-                            {Object.entries(wardNames).map(([key, value])=>
+                            {sortedMenuItems.map(({key, value})=>
                                 {
                                     if (modeState === 'bicycle'){
                                         if (wardsWithoutRoutes.includes(key)===false){
@@ -769,6 +783,7 @@ function TravelTime() {
                 <div className={styles.imp_info_container}>
                     <p ref={fromPlaceRef}></p>
                     <h2 ref={toPlaceRef}></h2>
+                    {modeState==='driving'?<img src="/img/car.png" alt="" />:modeState==='transit'?<img src="/img/bus.png" alt=""/>:<img src="/img/bicycle.png" alt=""/>}
                     <h3 ref={timeRef}></h3>
                     <h3 ref={distanceRef}></h3>
                 </div>
