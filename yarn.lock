@@ -2919,6 +2919,13 @@ chart.js@^3.9.1:
   resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-3.9.1.tgz#3abf2c775169c4c71217a107163ac708515924b8"
   integrity sha512-Ro2JbLmvg83gXF5F4sniaQ+lTbSv18E+TIf2cOeiH1Iqd2PGFOtem+DUufMZsCJwFE7ywPOpfXFBwRTGq7dh6w==
 
+chartjs-plugin-zoom@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/chartjs-plugin-zoom/-/chartjs-plugin-zoom-2.0.0.tgz#b02f5c4422fe517d0fb5d188b408158fef76c415"
+  integrity sha512-bqpi7DGy9a5hX7ThKl/xQaLzXvneSwhS0w/lNimZ8AJaoRVMKz5JfUoqwciJYV5ixKXJbgyvwC9HcJnyVsYmjg==
+  dependencies:
+    hammerjs "^2.0.8"
+
 chokidar@3.5.1:
   version "3.5.1"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-3.5.1.tgz#ee9ce7bbebd2b79f49f304799d5468e31e14e68a"
@@ -6785,6 +6792,11 @@ reactcss@^1.2.0:
   integrity sha512-KiwVUcFu1RErkI97ywr8nvx8dNOpT03rbnma0SSalTYjkrPYaEajR4a/MRt6DZ46K6arDRbWMNHF+xH7G7n/8A==
   dependencies:
     lodash "^4.0.1"
+
+reactjs-popup@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/reactjs-popup/-/reactjs-popup-2.0.5.tgz#588a74966bb126699429d739948e3448d7771eac"
+  integrity sha512-b5hv9a6aGsHEHXFAgPO5s1Jw1eSkopueyUVxQewGdLgqk2eW0IVXZrPRpHR629YcgIpC2oxtX8OOZ8a7bQJbxA==
 
 readable-stream@^2.0.2, readable-stream@^2.3.3, readable-stream@^2.3.6:
   version "2.3.7"
