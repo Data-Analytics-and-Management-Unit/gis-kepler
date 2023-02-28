@@ -773,6 +773,7 @@ function TravelTime() {
                 <div className={styles.imp_info_container}>
                     <p ref={fromPlaceRef}></p>
                     <h2 ref={toPlaceRef}></h2>
+                    {modeState==='driving'?<img src="/img/car.png" alt="" />:modeState==='transit'?<img src="/img/bus.png" alt=""/>:<img src="/img/bicycle.png" alt=""/>}
                     <h3 ref={timeRef}></h3>
                     <h3 ref={distanceRef}></h3>
                 </div>
