@@ -1,6 +1,7 @@
 import React from 'react'
 import { Bar } from 'react-chartjs-2';
 import zoomPlugin from "chartjs-plugin-zoom";
+import wardNames from '../../public/data/generic_layers/ward_names.json'
 
 import {
     Chart as ChartJS,
@@ -22,10 +23,13 @@ ChartJS.register(
 );
 
 const StackedBarChart = (props) => {
-    const labels = []
+    const labels = Object.entries(wardNames)
+    .sort(([key1, value1], [key2, value2]) => key1.localeCompare(key2))
+    .map(([key, value]) => ( value ));
+    /*const labels = []
     for (var i = 0; i < 198; i++) {
         labels.push((i+1).toString());
-    }
+    }*/
     var options = {
         scales: {
             x: {
