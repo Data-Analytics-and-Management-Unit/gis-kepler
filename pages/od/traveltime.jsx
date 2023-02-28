@@ -1,5 +1,5 @@
 import * as maplibre from 'maplibre-gl/dist/maplibre-gl';
-import 'mapbox-gl/dist/mapbox-gl.css'
+import 'maplibre-gl/dist/maplibre-gl.css'
 import { useState } from 'react';
 import { useEffect, useRef } from 'react';
 
