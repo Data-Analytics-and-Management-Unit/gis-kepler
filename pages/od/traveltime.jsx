@@ -13,7 +13,7 @@ import styles from '../../styles/TravelTime.module.scss';
 
 import Popup from 'reactjs-popup';
 
-import LineChart from '../../components/Charts/LineChart';
+import LineChart from '../../components/charts/LineChart';
 
 import { wardsWithoutRoutes } from '../../public/data/generic_layers/wards_without_routes';
 import wardNames from '../../public/data/generic_layers/ward_names.json'
@@ -21,7 +21,7 @@ import wardNames from '../../public/data/generic_layers/ward_names.json'
 import dynamic from 'next/dynamic'
 
 const StackedBarChart = dynamic(
-    ()=>import("../../components/Charts/StackedBarChart"),
+    ()=>import("../../components/charts/StackedBarChart"),
     {ssr: false}
 )
 
