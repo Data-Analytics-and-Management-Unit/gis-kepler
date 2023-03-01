@@ -654,7 +654,10 @@ function TravelTime() {
                 India Urban Observatory
             </div>
             <div className={styles.ward_info_box}>
-                <h2>Origin Ward</h2>
+                <div style={{'display':'flex', 'alignItems':'center'}}>
+                    <h2>Origin Ward</h2>
+                    <img src="/img/source-map-marker.png" alt="" style={{'width':'16px'}}/>  
+                </div>
                 <FormControl 
                     fullWidth
                     style={{
@@ -683,7 +686,10 @@ function TravelTime() {
                 </FormControl>
             </div>
             <div className={styles.ward_destination_info_box}>
-                <h2>Destination Ward</h2>
+                <div style={{'display':'flex', 'alignItems':'center'}}>
+                    <h2>Destination Ward</h2>
+                    <img src="/img/dest-map-marker.png" alt="" style={{'width':'16px'}}/> 
+                </div>
                 <FormControl 
                     fullWidth
                     style={{
