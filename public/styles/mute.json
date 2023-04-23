@@ -29,8 +29,8 @@
       "type": "vector"
     }
   },
-  "sprite": "https://api.maptiler.com/maps/streets/sprite",
-  "glyphs": "https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=get_your_own_OpIi9ZULNHzrESv6T2vL",
+  "sprite": "https://api.maptiler.com/maps/streets-v2/sprite",
+  "glyphs": "https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=GNoB13agvxsA3tr2krAf",
   "layers": [
     {
       "id": "background",

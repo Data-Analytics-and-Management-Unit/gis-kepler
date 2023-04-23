@@ -7344,8 +7344,8 @@
     "metadata": {
         "maptiler:copyright": "This style was generated on MapTiler Cloud. Usage outside of MapTiler Cloud requires valid MapTiler Data Package: https://www.maptiler.com/data/package/ -- please contact us."
     },
-    "glyphs": "https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=get_your_own_OpIi9ZULNHzrESv6T2vL",
-    "sprite": "https://api.maptiler.com/maps/streets/sprite",
+    "sprite": "https://api.maptiler.com/maps/streets-v2/sprite",
+    "glyphs": "https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=GNoB13agvxsA3tr2krAf",
     "bearing": 0,
     "pitch": 0,
     "center": [
