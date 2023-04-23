@@ -7344,7 +7344,7 @@
     "metadata": {
         "maptiler:copyright": "This style was generated on MapTiler Cloud. Usage outside of MapTiler Cloud requires valid MapTiler Data Package: https://www.maptiler.com/data/package/ -- please contact us."
     },
-    "sprite": "https://api.maptiler.com/maps/streets-v2/sprite",
+    "sprite": "https://api.maptiler.com/maps/openstreetmap/sprite?key=GNoB13agvxsA3tr2krAf",
     "glyphs": "https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=GNoB13agvxsA3tr2krAf",
     "bearing": 0,
     "pitch": 0,

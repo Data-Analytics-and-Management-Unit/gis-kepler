@@ -635,6 +635,7 @@ function TravelTime() {
             }
             res.push(
                 <div
+                    key={i}
                     style={{
                         backgroundColor: '#' + colors[i]
                     }} 
